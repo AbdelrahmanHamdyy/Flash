@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="mpj" type="kotlin.js">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../../../../Progarm/mpj-v0_44/mpj-v0_44/lib/mpj.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

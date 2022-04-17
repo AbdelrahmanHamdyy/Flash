@@ -11,7 +11,6 @@ if(SpeechRecognition) {
   const recognition = new SpeechRecognition();
   recognition.continuous = true;
   // recognition.lang = "en-US";
-
   searchForm.insertAdjacentHTML("beforeend", '<button type="button"><i class="fas fa-microphone"></i></button>');
   searchFormInput.style.paddingRight = "50px";
 
@@ -47,8 +46,8 @@ if(SpeechRecognition) {
   recognition.addEventListener("result", resultOfSpeechRecognition); // <=> recognition.onresult = function(event) {...} - Fires when you stop talking
   function resultOfSpeechRecognition(event) {
     const current = event.resultIndex;
-    const transcript = event.results[current][0].transcript;
-    
+      const transcript = event.results[ current ][ 0 ].transcript;
+      
     if(transcript.toLowerCase().trim()==="stop recording") {
       recognition.stop();
     }
