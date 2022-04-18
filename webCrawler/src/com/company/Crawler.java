@@ -85,6 +85,7 @@ public class Crawler {
             return;
         }
         Document doc =request(url);
+        //write hamdy function here
         if(doc!=null)
         {
             Elements childrenLinks=doc.select("a[href]");
@@ -114,5 +115,6 @@ public class Crawler {
         }
         return null;
     }
+
 }
 
