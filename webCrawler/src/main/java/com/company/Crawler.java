@@ -15,6 +15,8 @@ public class Crawler {
     private static HashSet<String> links=new HashSet<String>();
     private int numOfThreads;
     private ArrayList<String>myLinks;
+    private CompactString CS = new CompactString();
+    private DB db = new DB();
     private class myThread implements Runnable{
         private int start;
         private int end;
@@ -85,9 +87,11 @@ public class Crawler {
             return;
         }
         Document doc =request(url);
-        //write hamdy function here
         if(doc!=null)
         {
+            String C_String = CS.String_Compact(doc);
+            if (db.checkCompactString(C_String))
+                db.insertToDB(C_String, url);
             Elements childrenLinks=doc.select("a[href]");
             for(Element child:childrenLinks)
             {

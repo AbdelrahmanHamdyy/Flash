@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class CompactString {
     ArrayList<String> String_compact=new ArrayList<String>();
-    private String String_Compact(Document doc){
+    public String String_Compact(Document doc){
         int count_string=0;
         String compact="";
         String title=doc.title();

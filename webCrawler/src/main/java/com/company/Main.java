@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        DB.db_connect();
+        //DB.db_connect();
         Scanner cin =new Scanner(System.in);
         int numOfTreads=cin.nextInt();
         System.out.println(numOfTreads);
