@@ -20,8 +20,8 @@ public class DB {
         }
     }
 
-    public void insertToDB(String key, String value) {
-        MongoCollection<Document> col = db.getCollection("CompactStrings");
+    public void insertToDB(String collectionName, String key, String value) {
+        MongoCollection<Document> col = db.getCollection(collectionName);
         Document doc = new Document(key, value);
         col.insertOne(doc);
     }

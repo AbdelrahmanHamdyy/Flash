@@ -91,7 +91,7 @@ public class Crawler {
         {
             String C_String = CS.String_Compact(doc);
             if (db.checkCompactString(C_String))
-                db.insertToDB(C_String, url);
+                db.insertToDB("CompactStrings", C_String, url);
             Elements childrenLinks=doc.select("a[href]");
             for(Element child:childrenLinks)
             {
