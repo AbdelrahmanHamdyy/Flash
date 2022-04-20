@@ -6,6 +6,10 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 import static com.mongodb.client.model.Filters.exists;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 import org.bson.Document;
 
 public class DB {
@@ -32,5 +36,15 @@ public class DB {
         if (doc == null)
             return true;
         return false;
+    }
+
+    public List<String> getUrls() {
+        List<String> urls = new ArrayList<>();
+        MongoCollection<Document> col = db.getCollection("URLs");
+        Consumer<Document> extractUrls = doc -> {
+            urls.add(doc.get("url").toString());
+        };
+        col.find().forEach(extractUrls);
+        return urls;
     }
 }
