@@ -47,4 +47,5 @@ public class DB {
         col.find().forEach(extractUrls);
         return urls;
     }
+
 }
