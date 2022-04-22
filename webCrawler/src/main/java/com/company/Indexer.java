@@ -10,16 +10,11 @@ import java.io.IOException;
 import java.util.*;
 
 public class Indexer {
-    private static List<String> urls;
     private static DB db = new DB();
     private static  Map<String, Integer> tag = new HashMap<>();
     private static List<String> stopWords = new ArrayList<>();
     private static HashMap<String, Integer> word = new HashMap<>();
 
-    public static void setUrls() {
-        urls = db.getUrls();
-
-    }
     public static Document getDocument(String url) throws IOException {
         Connection connect= Jsoup.connect(url);
         Document doc = connect.get();
@@ -39,10 +34,10 @@ public class Indexer {
 
     public static void main(String[] args) throws IOException {
         setTags();
-        setUrls();
-        int Count = urls.size();
+        int Count = db.getUrlsCount();
         ReadStopWords();
-        for (String url : urls) {
+        for (int i = 1; i <= Count; i++) {
+            String url = db.getUrl(i);
             Document doc = getDocument(url);
             for (Map.Entry<String,Integer> entry : tag.entrySet())
                 indexing(entry.getKey(),doc, entry.getValue());
@@ -83,7 +78,7 @@ public class Indexer {
         HashMap<String, Integer> Filtered = new HashMap<>();
         for(String word : stopWords) {
             if(M.containsKey(word))
-                System.out.println(M.remove(word));
+                M.remove(word);
         }
         return M;
     }

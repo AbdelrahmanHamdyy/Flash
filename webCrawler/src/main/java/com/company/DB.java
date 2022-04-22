@@ -38,14 +38,25 @@ public class DB {
         return false;
     }
 
-    public List<String> getUrls() {
-        List<String> urls = new ArrayList<>();
+    public String getUrl(int i) {
+        final String[] url = {""};
         MongoCollection<Document> col = db.getCollection("URLs");
         Consumer<Document> extractUrls = doc -> {
-            urls.add(doc.get("url").toString());
+            if (doc.get(Integer.toString(i)) != null)
+                url[0] = doc.get(Integer.toString(i)).toString();
         };
         col.find().forEach(extractUrls);
-        return urls;
+        return url[0];
     }
 
+    public int getUrlsCount() {
+        MongoCollection<Document> col = db.getCollection("URLs");
+        final int[] count = new int[1];
+        Consumer<Document> extractUrls = doc -> {
+            if (doc.get("counter") != null)
+                count[0] = (int) doc.get("counter");
+        };
+        col.find().forEach(extractUrls);
+        return count[0];
+    }
 }
