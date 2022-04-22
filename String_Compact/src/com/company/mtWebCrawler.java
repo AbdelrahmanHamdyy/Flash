@@ -32,21 +32,22 @@ public class mtWebCrawler implements Runnable {
     private  void crawl (int level , String url){
         if(level <=MAX_DEPTH){
             Document doc=request(url);
-          if(doc !=null){
-                for(Element link : doc.select("a[href]")){
-                    String next_link = link.absUrl("href");
-                    if(visitedLinks.contains(next_link)==false){
-                        crawl(level++,next_link);
-                    }
-                }
-            }
+//          if(doc !=null){
+//                for(Element link : doc.select("a[href]")){
+//                    String next_link = link.absUrl("href");
+//                    if(visitedLinks.contains(next_link)==false){
+//                        crawl(level++,next_link);
+//                    }
+//                }
+ //          }
         }
     }
     private Document request(String url){
         try {
             Connection con = Jsoup.connect(url);
             Document doc =con.get();
-
+            System.out.println("\n"+  doc.select("title").text());
+            System.out.println("\n ***********************");
             if(con.response().statusCode()==200) {
                 System.out.println("\n**Bot ID:"
             + ID +" Receivved webpage at ");
