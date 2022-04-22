@@ -26,7 +26,7 @@ public class Indexer {
         return doc;
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void setTags() {
         tag.put("title",100);
         tag.put("h1",10);
         tag.put("h2",9);
@@ -35,29 +35,25 @@ public class Indexer {
         tag.put("h5",6);
         tag.put("h6",5);
         tag.put("p",4);
+    }
+
+    public static void main(String[] args) throws IOException {
+        setTags();
         setUrls();
         int Count = urls.size();
         ReadStopWords();
         for (String url : urls) {
             Document doc = getDocument(url);
-           // HashMap<String,Integer> unfilter =new HashMap<>();
-            for (Map.Entry<String,Integer> entry : tag.entrySet()) {
+            for (Map.Entry<String,Integer> entry : tag.entrySet())
                 indexing(entry.getKey(),doc, entry.getValue());
-            }
+
             word=removeStopWords(word);
             for (Map.Entry<String,Integer> entry : word.entrySet()) {
                 System.out.println("*****************");
                 System.out.println(entry.getKey()+"--->"+ entry.getValue());
-                System.out.println("*****************");
             }
             word.clear();
-            // For each document:
-            // Convert to text and split into words (remove html tags, etc..)
-            // Remove Stop words
-            // Stemming
-            // Store each word in db along with ...?
         }
-
     }
     public static void indexing(String tag, Document doc, int weight) {
         String temp_text =doc.select(tag).text();
@@ -71,7 +67,7 @@ public class Indexer {
     }
     public static void ReadStopWords() throws FileNotFoundException, IOException {
         try {
-            File file = new File("D:\\Projects\\Search-Engine\\Search-Engine\\webCrawler\\src\\main\\java\\com\\company\\stopwords.txt");
+            File file = new File("D:\\Github\\Search-Engine\\webCrawler\\src\\main\\java\\com\\company\\stopwords.txt");
             Scanner Reader = new Scanner(file);
             while (Reader.hasNextLine()) {
                 stopWords.add(Reader.nextLine());
@@ -85,12 +81,10 @@ public class Indexer {
 
     private static HashMap<String, Integer> removeStopWords (HashMap<String, Integer> M){
         HashMap<String, Integer> Filtered = new HashMap<>();
-
         for(String word : stopWords) {
             if(M.containsKey(word))
-                System.out.println( M.remove(word));
+                System.out.println(M.remove(word));
         }
-
         return M;
     }
 }

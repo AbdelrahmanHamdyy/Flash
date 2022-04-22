@@ -10,5 +10,4 @@ public class Main {
         System.out.println(numOfTreads);
         Crawler myCrawler =new Crawler("https://www.youtube.com/watch?v=KZK5rnxBWcU",numOfTreads);
     }
-
 }
