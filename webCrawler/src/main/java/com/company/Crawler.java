@@ -12,11 +12,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Crawler {
-    private static HashSet<String> links=new HashSet<String>();
     private int numOfThreads;
     private ArrayList<String>myLinks;
     private CompactString CS = new CompactString();
     private DB db = new DB();
+    private int numberOfLinks;
+    ArrayList<Thread> threads;
     private class myThread implements Runnable{
         private int start;
         private int end;
@@ -27,15 +28,20 @@ public class Crawler {
         }
         @Override
         public void run() {
-            //System.out.println(Thread.currentThread().getName()+" Starts with : "+Integer.toString(start)+" Ends with : "+Integer.toString(end));
             for(int i=start;i<end;i++)
             {
                 //System.out.println(Thread.currentThread().getName()+" crawls with : "+myLinks.get(i));
+                if(Thread.currentThread().isInterrupted())
+                    break;
                 crawl(myLinks.get(i));
             }
+            for(Thread t:threads)
+                t.interrupt();
         }
     }
     public Crawler(String link,int num)  {
+        numberOfLinks=(int)db.getAttr("Globals", "key","counter","value" );
+        System.out.println("counter : "+numberOfLinks);
         myLinks=new ArrayList<String>();
         System.out.println("WebCrawler created");
         try {
@@ -48,7 +54,7 @@ public class Crawler {
             }
             int numOfLinks = myLinks.size();
             numOfThreads = Math.min(num, numOfLinks);
-            ArrayList<Thread> threads = new ArrayList<Thread>(numOfThreads);
+            threads= new ArrayList<Thread>(numOfThreads);
             int s = 0;
             int quantity = numOfLinks / numOfThreads;
             int rem = numOfLinks % numOfThreads;
@@ -64,7 +70,6 @@ public class Crawler {
                 s = e;
                 temp.setName(Integer.toString(i));
                 threads.add(temp);
-                //System.out.print(threads.get(i).getName());
                 temp.start();
             }
             for (Thread i : threads) {
@@ -77,44 +82,52 @@ public class Crawler {
         }
         catch (IOException e) {
         System.out.println("Error");
-    }
+        }
+        db.updateDB("Globals","key","counter","value",numberOfLinks);
     }
 
     public void crawl(String url)
     {
-        if(links.size()>100)
+        Document doc=null;
+        synchronized (db)
         {
-            return;
-        }
-        Document doc =request(url);
-        if(doc!=null)
-        {
+            if(numberOfLinks>109)
+                return;
+            doc =request(url);
+            if(doc==null)
+                return;
             String C_String = CS.String_Compact(doc);
-            if (db.checkCompactString(C_String)) {
-                db.insertToDB("CompactStrings", C_String, url);
-                db.insertToDB("URLs", "url", url);
+            if (db.isExists("URLs", "CompactString", C_String)) {
+                return;
             }
-            Elements childrenLinks=doc.select("a[href]");
-            for(Element child:childrenLinks)
-            {
-                String childLink=child.absUrl("href");
-                crawl(childLink);
-            }
+            ArrayList<String>keys=new ArrayList<String>();
+            ArrayList<Object>values=new ArrayList<Object>();
+            keys.add("url");values.add(url);
+            keys.add("id");values.add(numberOfLinks);
+            keys.add("CompactString");values.add(C_String);
+            db.insertToDB("URLs",keys,values);
+            numberOfLinks++;
+
         }
+
+        Elements childrenLinks=doc.select("a[href]");
+        for(Element child:childrenLinks)
+        {
+            String childLink=child.absUrl("href");
+            crawl(childLink);
+        }
+
     }
     public Document request(String url)
     {
         try {
+            if (db.isExists("URLs", "url", url))
+                return null;
             Connection connect= Jsoup.connect(url);
             Document doc=connect.get();
-            synchronized (links)
+            if(connect.response().statusCode()==200)
             {
-                if(!links.contains(url)&& connect.response().statusCode()==200)
-                {
-                    links.add(url);
-                    System.out.println(Thread.currentThread().getName()+" : "+url);
-                    return doc;
-                }
+                return doc;
             }
         } catch (IOException e) {
             return null;
