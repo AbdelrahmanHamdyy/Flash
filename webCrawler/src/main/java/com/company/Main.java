@@ -9,7 +9,7 @@ public class Main {
         Scanner cin =new Scanner(System.in);
         int numOfTreads=cin.nextInt();
         System.out.println(numOfTreads);
-        Crawler myCrawler =new Crawler("https://www.webharvy.com/",numOfTreads);
+        Crawler myCrawler =new Crawler("https://www.cyotek.com/cyotek-webcopy",numOfTreads);
         //https://www.cyotek.com/cyotek-webcopy
         //
 //        DB db = new DB();

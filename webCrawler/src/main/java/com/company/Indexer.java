@@ -1,5 +1,6 @@
 package com.company;
 
+import com.mongodb.BasicDBObject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -11,11 +12,9 @@ import java.util.*;
 
 public class Indexer {
     private static DB db = new DB();
-    private static Stemmer stemmer = new Stemmer();
     private static  Map<String, Integer> tag = new HashMap<>();
     private static List<String> stopWords = new ArrayList<>();
-    private static HashMap<String, Integer> word = new HashMap<>();
-    private static int Count ;
+    private static HashMap<String, List<Integer>> word = new HashMap<>();
     public static Document getDocument(String url) throws IOException {
         Connection connect= Jsoup.connect(url);
         Document doc = connect.get();
@@ -36,17 +35,18 @@ public class Indexer {
     public static void main(String[] args) throws IOException {
         setTags();
         ReadStopWords();
+        int Count = (int)db.getAttr("Globals", "key","counter","value" );
         for (int i = 0; i < Count; i++) {
-            String url = (String)db.getAttr("URLs","ID",i,"url");
+            String url = (String)db.getAttr("URLs","id",i,"url");
             Document doc = getDocument(url);
             for (Map.Entry<String,Integer> entry : tag.entrySet())
-            {
                 indexing(entry.getKey(),doc, entry.getValue());
-            }
-            for (Map.Entry<String,Integer> entry : word.entrySet()) {
+
+            for (Map.Entry<String,List<Integer>> entry : word.entrySet()) {
                 System.out.println("*****************");
                 System.out.println(entry.getKey()+"--->"+ entry.getValue());
             }
+            db.insertToIndexer(word, url);
             word.clear();
         }
     }
@@ -55,10 +55,43 @@ public class Indexer {
         temp_text = removeStopWords(temp_text);
         String[] text_split = temp_text.split(" "); // split the text
         for(int i=0;i<text_split.length;i++) {
-            String stemmed=stemmer.Stemming(text_split[i]);
-            if (!stemmed.equals("")) {
-                word.putIfAbsent(stemmed, 0); // if first time to put it
-                word.put(stemmed, word.get(stemmed) + weight); // increase weight
+            text_split[i]= text_split[i].replaceAll("[^a-zA-Z]","");
+            if (!text_split[i].equals("")) {
+                word.putIfAbsent(text_split[i], new ArrayList<Integer>(){{add(0); add(0);}}); // if first time to put it
+                int temp = i;
+                word.put(text_split[i], new ArrayList<>(){{add(word.get(text_split[temp]).get(0) + weight);
+                    add(word.get(text_split[temp]).get(1) + 1);}}); // increase weight
+            }
+        }
+    }
+
+//    {
+//        "word":"computer"
+//        "urls": [{"TF":"val", "weight":"val", "url":"url"}, {},{}];
+//        "DF":"val"
+//    }
+
+    public static void insertToIndexer(HashMap<String, List<Integer>> words, String url) {
+        for (Map.Entry<String,List<Integer>> entry : words.entrySet()) {
+            if (db.isExists("words", "word", entry.getKey())) {
+                int DF = (int) db.getAttr("words", "word", entry.getKey(), "DF");
+                db.updateDB("words", "word", entry.getKey(), "DF", DF + 1);
+                BasicDBObject doc = new BasicDBObject("TF", entry.getValue().get(1));
+                doc.append("weight", entry.getValue().get(0));
+                doc.append("url", url);
+                ArrayList<BasicDBObject> arr = (ArrayList<BasicDBObject>) db.getAttr("words", "word", entry.getKey(), "urls");
+                System.out.println(arr);
+                arr.add(doc);
+                System.out.println(arr);
+                db.updateDB("words", "word", entry.getKey(), "urls", arr);
+            }
+            else {
+                ArrayList<String> keys = new ArrayList<>(){{add("word"); add("urls"); add("DF");}};
+                BasicDBObject doc = new BasicDBObject("TF", entry.getValue().get(1));
+                doc.append("weight", entry.getValue().get(0));
+                doc.append("url", url);
+                ArrayList<Object> values = new ArrayList<>(){{add(entry.getKey()); add(doc); add(1);}};
+                db.insertToDB("words", keys, values);
             }
         }
     }
@@ -79,7 +112,7 @@ public class Indexer {
 
     private static String removeStopWords (String M){
         for(String word : stopWords) {
-            M.replaceAll(word, "");
+            //M.replaceAll(word, "");
         }
         return M;
     }
