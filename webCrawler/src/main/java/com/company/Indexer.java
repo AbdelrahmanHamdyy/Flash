@@ -13,10 +13,11 @@ import java.util.*;
 
 public class Indexer {
     private static DB db = new DB();
-    private static  Map<String, Integer> tag = new HashMap<>();
+    private static Map<String, Integer> tag = new HashMap<>();
     private static List<String> stopWords = new ArrayList<>();
-    private static HashMap<String, List<Integer>> word = new HashMap<>();
+    private static HashMap<String, List<Integer>> wordMap = new HashMap<>();
     private static Stemmer stemmer = new Stemmer();
+
     public static Document getDocument(String url) throws IOException {
         Connection connect= Jsoup.connect(url);
         Document doc = connect.get();
@@ -39,36 +40,40 @@ public class Indexer {
         ReadStopWords();
         int Count = (int)db.getAttr("Globals", "key","counter","value" );
         for (int i = 0; i < Count; i++) {
-            String url = (String)db.getAttr("URLs","id",i,"url");
+            String url = (String)db.getAttr("URLs","id", i,"url");
             Document doc = getDocument(url);
             for (Map.Entry<String,Integer> entry : tag.entrySet())
-                indexing(entry.getKey(),doc, entry.getValue());
+                indexing(entry.getKey(), doc, entry.getValue());
 
-            for (Map.Entry<String,List<Integer>> entry : word.entrySet()) {
-                System.out.println("*****************");
-                System.out.println(entry.getKey()+"--->"+ entry.getValue());
-            }
-            insertToIndexer(word, url);
-            word.clear();
+            for (Map.Entry<String,List<Integer>> entry : wordMap.entrySet())
+                System.out.println(entry.getKey()+" ---> "+ entry.getValue());
+
+            insertToIndexer(wordMap, url);
+            wordMap.clear();
         }
     }
     public static void indexing(String tag, Document doc, int weight) {
         String temp_text =doc.select(tag).text();
         String[] text_split = temp_text.split(" "); // split the text
         text_split = removeStopWords(text_split);
-        for(int i=0;i<text_split.length;i++) {
-            if (!text_split[i].equals("")) {
-                String Temp = stemmer.Stemming(text_split[i]);
-                word.putIfAbsent(Temp, new ArrayList<Integer>(){{add(0); add(0);}}); // if first time to put it
-                word.put(Temp, new ArrayList<>(){{add(word.get(Temp).get(0) + weight);
-                    add(word.get(Temp).get(1) + 1);}}); // increase weight & TF
+        for (String s : text_split)
+            if (!s.equals("")) {
+                String Temp = stemmer.Stemming(s);
+                wordMap.putIfAbsent(Temp, new ArrayList<Integer>() {{
+                    add(0);
+                    add(0);
+                }}); // For initial insertion
+                wordMap.put(Temp, new ArrayList<>() {{
+                    add(wordMap.get(Temp).get(0) + weight);
+                    add(wordMap.get(Temp).get(1) + 1);
+                }}); // Increase weight & TF of each word
             }
-        }
     }
 
+//    Indexer structure in the DB
 //    {
 //        "word":"computer"
-//        "urls": [{"TF":"val", "weight":"val", "url":"url"}, {},{}];
+//        "urls": [{"TF":"val", "weight":"val", "url":"url"}, {...}, {...}];
 //        "DF":"val"
 //    }
 

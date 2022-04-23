@@ -88,13 +88,13 @@ public class Crawler {
 
     public void crawl(String url)
     {
-        Document doc=null;
+        Document doc = null;
         synchronized (db)
         {
-            if(numberOfLinks>20)
+            if(numberOfLinks > 20)
                 return;
-            doc =request(url);
-            if(doc==null)
+            doc = request(url);
+            if(doc == null)
                 return;
             String C_String = CS.String_Compact(doc);
             if (db.isExists("URLs", "CompactString", C_String)) {
