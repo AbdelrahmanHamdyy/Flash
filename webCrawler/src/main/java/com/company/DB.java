@@ -68,29 +68,4 @@ public class DB {
         col.updateOne(query, updateObject);
 
     }
-
-    public void insertToIndexer(HashMap<String, List<Integer>> words, String url) {
-        for (Map.Entry<String,List<Integer>> entry : words.entrySet()) {
-            if (isExists("words", "word", entry.getKey())) {
-                int DF = (int) getAttr("words", "word", entry.getKey(), "DF");
-                updateDB("words", "word", entry.getKey(), "DF", DF + 1);
-                Document doc = new Document();
-                doc.append("weight", entry.getValue().get(0));
-                doc.append("url", url);
-                ArrayList<Document> arr = (ArrayList<Document>) getAttr("words", "word", entry.getKey(), "urls");
-                System.out.println(arr);
-                arr.add(doc);
-                System.out.println(arr);
-                updateDB("words", "word", entry.getKey(), "urls", arr);
-            }
-            else {
-                ArrayList<String> keys = new ArrayList<>(){{add("word"); add("urls"); add("DF");}};
-                BasicDBObject doc = new BasicDBObject("TF", entry.getValue().get(1));
-                doc.append("weight", entry.getValue().get(0));
-                doc.append("url", url);
-                ArrayList<Object> values = new ArrayList<>(){{add(entry.getKey()); add(doc); add(1);}};
-                insertToDB("words", keys, values);
-            }
-        }
-    }
 }

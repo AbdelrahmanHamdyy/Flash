@@ -91,7 +91,7 @@ public class Crawler {
         Document doc=null;
         synchronized (db)
         {
-            if(numberOfLinks>109)
+            if(numberOfLinks>20)
                 return;
             doc =request(url);
             if(doc==null)
@@ -134,6 +134,5 @@ public class Crawler {
         }
         return null;
     }
-
 }
 

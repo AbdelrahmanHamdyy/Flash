@@ -1,6 +1,7 @@
 package com.company;
 
 import com.mongodb.BasicDBObject;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -15,6 +16,7 @@ public class Indexer {
     private static  Map<String, Integer> tag = new HashMap<>();
     private static List<String> stopWords = new ArrayList<>();
     private static HashMap<String, List<Integer>> word = new HashMap<>();
+    private static Stemmer stemmer = new Stemmer();
     public static Document getDocument(String url) throws IOException {
         Connection connect= Jsoup.connect(url);
         Document doc = connect.get();
@@ -46,21 +48,20 @@ public class Indexer {
                 System.out.println("*****************");
                 System.out.println(entry.getKey()+"--->"+ entry.getValue());
             }
-            db.insertToIndexer(word, url);
+            insertToIndexer(word, url);
             word.clear();
         }
     }
     public static void indexing(String tag, Document doc, int weight) {
         String temp_text =doc.select(tag).text();
-        temp_text = removeStopWords(temp_text);
         String[] text_split = temp_text.split(" "); // split the text
+        text_split = removeStopWords(text_split);
         for(int i=0;i<text_split.length;i++) {
-            text_split[i]= text_split[i].replaceAll("[^a-zA-Z]","");
             if (!text_split[i].equals("")) {
-                word.putIfAbsent(text_split[i], new ArrayList<Integer>(){{add(0); add(0);}}); // if first time to put it
-                int temp = i;
-                word.put(text_split[i], new ArrayList<>(){{add(word.get(text_split[temp]).get(0) + weight);
-                    add(word.get(text_split[temp]).get(1) + 1);}}); // increase weight
+                String Temp = stemmer.Stemming(text_split[i]);
+                word.putIfAbsent(Temp, new ArrayList<Integer>(){{add(0); add(0);}}); // if first time to put it
+                word.put(Temp, new ArrayList<>(){{add(word.get(Temp).get(0) + weight);
+                    add(word.get(Temp).get(1) + 1);}}); // increase weight & TF
             }
         }
     }
@@ -87,10 +88,12 @@ public class Indexer {
             }
             else {
                 ArrayList<String> keys = new ArrayList<>(){{add("word"); add("urls"); add("DF");}};
+                ArrayList<BasicDBObject> urls = new ArrayList<BasicDBObject>();
                 BasicDBObject doc = new BasicDBObject("TF", entry.getValue().get(1));
                 doc.append("weight", entry.getValue().get(0));
                 doc.append("url", url);
-                ArrayList<Object> values = new ArrayList<>(){{add(entry.getKey()); add(doc); add(1);}};
+                urls.add(doc);
+                ArrayList<Object> values = new ArrayList<>(){{add(entry.getKey()); add(urls); add(1);}};
                 db.insertToDB("words", keys, values);
             }
         }
@@ -110,11 +113,14 @@ public class Indexer {
         }
     }
 
-    private static String removeStopWords (String M){
+    private static String[] removeStopWords (String[] M){
         for(String word : stopWords) {
-            //M.replaceAll(word, "");
+            for (int i = 0; i < M.length; i++) {
+                M[i] = M[i].replaceAll("[^a-zA-Z]","");
+                if (M[i].toLowerCase(Locale.ROOT).equals(word))
+                    M = ArrayUtils.remove(M, i);
+            }
         }
         return M;
     }
-
 }
