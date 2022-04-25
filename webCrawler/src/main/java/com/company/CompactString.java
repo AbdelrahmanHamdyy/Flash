@@ -29,6 +29,7 @@ public class CompactString {
         System.out.println(temp_text);
 
         for(int i = 0; i < span_text_split.length; i++) {
+            span_text_split[i]= span_text_split[i].replaceAll("[^a-zA-Z]","");
             if (!span_text_split[i].equals("")) {
                 compact += span_text_split[i].charAt(0);
                 count_string++;

@@ -20,8 +20,7 @@ public class Indexer {
 
     public static Document getDocument(String url) throws IOException {
         Connection connect= Jsoup.connect(url);
-        Document doc = connect.get();
-        return doc;
+        return connect.get();
     }
 
     public static void setTags() {

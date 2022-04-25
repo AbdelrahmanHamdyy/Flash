@@ -10,6 +10,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.net.*;
+import java.util.List;
 
 public class Crawler {
     private int numOfThreads;
@@ -44,7 +45,9 @@ public class Crawler {
                 t.interrupt();
         }
     }
+
     public Crawler(String link,int num)  {
+        setCounter();
         numberOfLinks=(int)db.getAttr("Globals", "key","counter","value" );
         System.out.println("counter : "+numberOfLinks);
         myLinks=new ArrayList<String>();
@@ -96,9 +99,9 @@ public class Crawler {
 
         synchronized (db)
         {
-            if(!CheckRobots(url))
-                return;
             if(numberOfLinks > 20)
+                return;
+            if(!CheckRobots(url))
                 return;
             doc = request(url);
             if(doc == null)
@@ -140,6 +143,17 @@ public class Crawler {
         }
         return null;
     }
+
+    public void setCounter() {
+        ArrayList<String> keys = new ArrayList<>();
+        keys.add("key");
+        keys.add("value");
+        ArrayList<Object> values = new ArrayList<>();
+        values.add("counter");
+        values.add(0);
+        db.insertToDB("Globals", keys, values);
+    }
+
     public boolean CheckRobots(String MyUrl) throws IOException {
         ArrayList<String>ForbiddenLinks=new ArrayList<String>();
         URL Specific_Url=new URL(MyUrl);
@@ -183,7 +197,7 @@ public class Crawler {
             //we will crop the content until the first disallow we have found
             String subTwo=subOne.substring(SubStart);
             //here we will determine where is the end of the content we want
-            //if we have anyother User-agent or the end of the document
+            //if we have another User-agent or the end of the document
             int EndIndex1=subTwo.indexOf("User-agent:");
             int EndIndex2=subTwo.indexOf("</body>");
             String FinalString;
@@ -206,7 +220,7 @@ public class Crawler {
                     WhileEnd=Statement.indexOf("disallow");
                 if(WhileEnd==-1)
                     WhileEnd=Statement.length();
-                String WantedString=Statement.substring(1,WhileEnd);
+                String WantedString=Statement.substring(1,WhileEnd - 1);
                 ForbiddenLinks.add(WantedString);
                 //if there is'nt then we have reached the end and we will break
                 if(WhileEnd==Statement.length())
