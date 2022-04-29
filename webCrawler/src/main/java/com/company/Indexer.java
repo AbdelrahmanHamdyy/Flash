@@ -105,7 +105,7 @@ public class Indexer {
 
     public static void ReadStopWords() throws FileNotFoundException, IOException {
         try {
-            File file = new File("D:\\Github\\Search-Engine\\webCrawler\\src\\main\\java\\com\\company\\stopwords.txt");
+            File file = new File("D:\\CMP\\CMP4\\APT\\project\\Search-Engine\\webCrawler\\src\\main\\java\\com\\company\\stopwords.txt");
             Scanner Reader = new Scanner(file);
             while (Reader.hasNextLine()) {
                 stopWords.add(Reader.nextLine());
