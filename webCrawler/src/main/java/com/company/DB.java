@@ -1,9 +1,6 @@
 package com.company;
 
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.*;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -46,7 +43,18 @@ public class DB {
         assert doc != null;
         return doc.get(attr);
     }
+    public Object getListOf(String collectionName, String attr)
+    {
+        MongoCollection<Document> col = db.getCollection(collectionName);
 
+        FindIterable<Document> ListOfdoc = col.find();
+        ArrayList<Object>result=new ArrayList<Object>();
+        for(Document i:ListOfdoc)
+        {
+            result.add(i.get(attr));
+        }
+        return result;
+    }
     public void updateDB(String collectionName, String key, String value,String attr,Object newVal)
     {
         MongoCollection<Document> col = db.getCollection(collectionName);

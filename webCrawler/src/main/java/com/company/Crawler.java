@@ -10,7 +10,6 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.net.*;
-import java.util.List;
 
 public class Crawler {
     private int numOfThreads;
@@ -46,50 +45,39 @@ public class Crawler {
         }
     }
 
-    public Crawler(String link,int num)  {
+    public Crawler(int num)  {
         setCounter();
         numberOfLinks=(int)db.getAttr("Globals", "key","counter","value" );
         System.out.println("counter : "+numberOfLinks);
-        myLinks=new ArrayList<String>();
+        myLinks=(ArrayList<String>)db.getListOf("CrawlerLinks","url");
         System.out.println("WebCrawler is created");
-        try {
-            Connection connect = Jsoup.connect(link);
-            Document doc = connect.get();
-            Elements childrenLinks = doc.select("a[href]");
-            for (Element child : childrenLinks) {
-                String childLink = child.absUrl("href");
-                myLinks.add(childLink);
+
+        int numOfLinks = myLinks.size();
+        numOfThreads = Math.min(num, numOfLinks);
+        threads= new ArrayList<Thread>(numOfThreads);
+        int s = 0;
+        int quantity = numOfLinks / numOfThreads;
+        int rem = numOfLinks % numOfThreads;
+        System.out.println("numOfLinks : " + numOfLinks + " numOfThreads : " + numOfThreads + " quantity : " + quantity + " rem : " + rem);
+        for (int i = 0; i < numOfThreads; i++) {
+            int e = s + quantity;
+            if (rem != 0) {
+                e++;
+                rem--;
             }
-            int numOfLinks = myLinks.size();
-            numOfThreads = Math.min(num, numOfLinks);
-            threads= new ArrayList<Thread>(numOfThreads);
-            int s = 0;
-            int quantity = numOfLinks / numOfThreads;
-            int rem = numOfLinks % numOfThreads;
-            System.out.println("numOfLinks : " + numOfLinks + " numOfThreads : " + numOfThreads + " quantity : " + quantity + " rem : " + rem);
-            for (int i = 0; i < numOfThreads; i++) {
-                int e = s + quantity;
-                if (rem != 0) {
-                    e++;
-                    rem--;
-                }
-                //System.out.println(i+" Starts with : "+s+" Ends with : "+e);
-                Thread temp = new Thread(new myThread(s, e));
-                s = e;
-                temp.setName(Integer.toString(i));
-                threads.add(temp);
-                temp.start();
-            }
-            for (Thread i : threads) {
-                try {
-                    i.join();
-                } catch (InterruptedException exe) {
-                    System.out.println("Error with joining");
-                }
-            }
+            //System.out.println(i+" Starts with : "+s+" Ends with : "+e);
+            Thread temp = new Thread(new myThread(s, e));
+            s = e;
+            temp.setName(Integer.toString(i));
+            threads.add(temp);
+            temp.start();
         }
-        catch (IOException e) {
-        System.out.println("Error");
+        for (Thread i : threads) {
+            try {
+                i.join();
+            } catch (InterruptedException exe) {
+                System.out.println("Error with joining");
+            }
         }
         db.updateDB("Globals","key","counter","value",numberOfLinks);
     }
