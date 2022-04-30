@@ -15,7 +15,7 @@ import java.util.List;
 public class Crawler {
     private int numOfThreads;
     private ArrayList<String>myLinks;
-
+    private long NumberOfWords;
     private CompactString CS = new CompactString();
     private DB db = new DB();
     private int numberOfLinks;
@@ -99,7 +99,7 @@ public class Crawler {
 
         synchronized (db)
         {
-            if(numberOfLinks > 20)
+            if(numberOfLinks >= 20)
                 return;
             if(!CheckRobots(url))
                 return;
@@ -115,6 +115,9 @@ public class Crawler {
             keys.add("url");values.add(url);
             keys.add("id");values.add(numberOfLinks);
             keys.add("CompactString");values.add(C_String);
+            String link= doc.body().text();
+            NumberOfWords=link.length();
+            keys.add("NumberOfWords");values.add(NumberOfWords);
             db.insertToDB("URLs",keys,values);
             numberOfLinks++;
         }

@@ -13,19 +13,19 @@ import java.util.Scanner;
 public class queryProcessor {
     String[]words;
     private DB db;
-    private ArrayList<Pair>list;
-    private ArrayList<Pair>stemmed;
+    public ArrayList<Pair>list;
+    public ArrayList<Pair>stemmed;
     private static Stemmer stemmer = new Stemmer();
     public static void main(String[] args)
     {
-        File myFile = new File("D:\\CMP\\CMP4\\APT\\project\\Search-Engine\\webCrawler\\src\\main\\java\\com\\company\\input.txt");
+        File myFile = new File("input.txt");
         try {
             Scanner cin = new Scanner(myFile);
             String query=cin.next();
             queryProcessor myq=new queryProcessor(query);
             System.out.println(query);
             try {
-                FileWriter myWriter = new FileWriter("D:\\CMP\\CMP4\\APT\\project\\Search-Engine\\webCrawler\\src\\main\\java\\com\\company\\output.txt");
+                FileWriter myWriter = new FileWriter("output.txt");
                 ArrayList<Pair>l=myq.list;
                 int n=l.size();
                 for(int i=0;i<n;i++)
