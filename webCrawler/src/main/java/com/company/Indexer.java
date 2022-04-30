@@ -57,24 +57,35 @@ public class Indexer {
         text_split = removeStopWords(text_split);
         for (String s : text_split)
             if (!s.equals("")) {
-                String Temp = stemmer.Stemming(s);
-                wordMap.putIfAbsent(Temp, new ArrayList<Integer>() {{
+                String lowerCaseString=s.toLowerCase();
+                String Temp = stemmer.Stemming(lowerCaseString);
+                if(!db.isExists("stemming","key",Temp))
+                {
+                    ArrayList<String>keys=new ArrayList<String>();
+                    ArrayList<Object>values=new ArrayList<Object>();
+                    keys.add("key");
+                    values.add(Temp);
+                    keys.add("array");
+                    ArrayList<String> fir=new ArrayList<String>();
+                    fir.add(lowerCaseString);
+                    values.add(fir);
+                    db.insertToDB("stemming",keys,values);
+                }
+                else
+                {
+                    db.pushToList("stemming","key",Temp,"array",lowerCaseString);
+                }
+                wordMap.putIfAbsent(lowerCaseString, new ArrayList<Integer>() {{
                     add(0);
                     add(0);
                 }}); // For initial insertion
-                wordMap.put(Temp, new ArrayList<>() {{
-                    add(wordMap.get(Temp).get(0) + weight);
-                    add(wordMap.get(Temp).get(1) + 1);
+                wordMap.put(lowerCaseString, new ArrayList<>() {{
+                    add(wordMap.get(lowerCaseString).get(0) + weight);
+                    add(wordMap.get(lowerCaseString).get(1) + 1);
                 }}); // Increase weight & TF of each word
             }
     }
 
-//    Indexer structure in the DB
-//    {
-//        "word":"computer"
-//        "urls": [{"TF":"val", "weight":"val", "url":"url"}, {...}, {...}];
-//        "DF":"val"
-//    }
 
     public static void insertToIndexer(HashMap<String, List<Integer>> words, String url) {
         for (Map.Entry<String,List<Integer>> entry : words.entrySet()) {

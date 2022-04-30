@@ -9,7 +9,12 @@ import static com.mongodb.client.model.Filters.eq;
 
 import java.util.ArrayList;
 
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
+import com.mongodb.client.model.ReturnDocument;
+import com.mongodb.client.model.Updates;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 public class DB {
     private final MongoDatabase db;
@@ -32,7 +37,6 @@ public class DB {
     {
         MongoCollection<Document> col = db.getCollection(collectionName);
         Document doc = col.find(eq(key,value)).first();
-        //System.out.println(doc);
         return doc != null;
     }
 
@@ -58,6 +62,19 @@ public class DB {
         assert query != null;
         col.updateOne(query, updateObject);
 
+    }
+    public void pushToList(String collectionName, String key, String value,String array,Object newVal)
+    {
+        ArrayList<String>arr=(ArrayList<String>)getAttr(collectionName,key,value,array);
+        if(!arr.contains(newVal))
+        {
+            MongoCollection<Document> col = db.getCollection(collectionName);
+            Bson filter = Filters.eq(key, value);
+            Bson update = Updates.push(array, newVal);
+            FindOneAndUpdateOptions options = new FindOneAndUpdateOptions()
+                    .returnDocument(ReturnDocument.AFTER);
+            col.findOneAndUpdate(filter, update, options);
+        }
     }
 
 }
