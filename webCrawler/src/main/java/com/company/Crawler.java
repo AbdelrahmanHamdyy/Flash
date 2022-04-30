@@ -1,4 +1,3 @@
-
 package com.company;
 
 import org.jsoup.Connection;
@@ -37,11 +36,10 @@ public class Crawler {
                 try {
                     crawl(myLinks.get(i));
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
+                    System.out.println("~~~~~~~~~~~~~~~~~~");
                 }
             }
-            for(Thread t:threads)
-                t.interrupt();
         }
     }
 
@@ -50,7 +48,7 @@ public class Crawler {
         numberOfLinks=(int)db.getAttr("Globals", "key","counter","value" );
         System.out.println("counter : "+numberOfLinks);
         myLinks=(ArrayList<String>)db.getListOf("CrawlerLinks","url");
-        System.out.println("WebCrawler is created");
+        System.out.println("WebCrawler is created"+myLinks);
 
         int numOfLinks = myLinks.size();
         numOfThreads = Math.min(num, numOfLinks);
@@ -87,10 +85,16 @@ public class Crawler {
 
         synchronized (db)
         {
-            if(numberOfLinks >= 20)
+            if(Thread.currentThread().isInterrupted())
                 return;
-            if(!CheckRobots(url))
+            if(numberOfLinks >= 50)
+            {
+                for(Thread t:threads)
+                    t.interrupt();
                 return;
+            }
+//            if(!CheckRobots(url))
+//                return;
             doc = request(url);
             if(doc == null)
                 return;
@@ -136,6 +140,8 @@ public class Crawler {
     }
 
     public void setCounter() {
+        if(db.isExists("Globals","key","counter"))
+            return;
         ArrayList<String> keys = new ArrayList<>();
         keys.add("key");
         keys.add("value");
@@ -247,4 +253,3 @@ public class Crawler {
         return true;
     }
 }
-

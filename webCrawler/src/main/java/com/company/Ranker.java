@@ -10,7 +10,6 @@ public class Ranker {
     public static List<Pair> urls;
     public static List<Pair> stemmedUrls;
     public static HashMap<String, Double> sortedMap = new HashMap<>();
-
     Ranker(List<Pair> list, List<Pair> stemmed) {
         urls = list;
         stemmedUrls = stemmed;
@@ -34,7 +33,7 @@ public class Ranker {
         }
     }
 
-    public static void rank(List<Pair> list) {
+    public static void rank(List<Pair> list, int stem) {
         for (Pair P : list) {
             for (Document object : (List<Document>) P.first) {
                 String url = (String) object.get("url");
@@ -46,11 +45,15 @@ public class Ranker {
                 double NormalizedTF = (double) TF / TotalWords;
                 double TF_IDF = NormalizedTF * IDF;
                 int weight = (int) object.get("weight");
-                double Priority = TF_IDF * weight * 100;
+                double Priority = TF_IDF * weight * 100; // Multiplied by 100 to obtain a reasonable range
+                int factor;
+                if (stem == 0) factor = 2; // For original words
+                else factor = 1; // For stemmed words
                 if (sortedMap.containsKey(url))
-                    sortedMap.replace(url, Priority + sortedMap.get(url));
+                    sortedMap.replace(url, Priority + sortedMap.get(url) + (factor * 5)); // Factor * 5 for urls containing
+                                                                                     // different words in the search query
                 else
-                    sortedMap.put(url, Priority);
+                    sortedMap.put(url, Priority + factor);
             }
         }
         sortByValue(false);
@@ -63,15 +66,16 @@ public class Ranker {
     }
 
     public static void main(String[] args) throws IOException {
+        //String query = WebInterface.getInput();
         queryProcessor myq = new queryProcessor("offer product");
         urls = myq.list;
         stemmedUrls = myq.stemmed;
-        rank(urls);
-        rank(stemmedUrls);
+        rank(urls, 0);
+        rank(stemmedUrls, 1);
         print();
     }
 }
-// Computer Engineering Cairo University
+// query: Computer Engineering Cairo University
 // Outer loop:
 //    Iterates over the lists of each word and DF
 //          Inner loop:

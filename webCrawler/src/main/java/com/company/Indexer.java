@@ -11,12 +11,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 
+import static com.company.Phrase_Searching.*;
+
 public class Indexer {
-    private static DB db = new DB();
-    private static Map<String, Integer> tag = new HashMap<>();
-    private static List<String> stopWords = new ArrayList<>();
-    private static HashMap<String, List<Integer>> wordMap = new HashMap<>();
-    private static Stemmer stemmer = new Stemmer();
+    public static DB db = new DB();
+    public static Map<String, Integer> tag = new HashMap<>();
+    public static List<String> stopWords = new ArrayList<>();
+    public static HashMap<String, List<Integer>> wordMap = new HashMap<>();
+    public static HashMap<String, List<Integer>> wordMap_phrase = new HashMap<>();
+    public static Stemmer stemmer = new Stemmer();
 
     public static Document getDocument(String url) throws IOException {
         Connection connect= Jsoup.connect(url);
@@ -41,14 +44,18 @@ public class Indexer {
         for (int i = 0; i < Count; i++) {
             String url = (String)db.getAttr("URLs","id", i,"url");
             Document doc = getDocument(url);
-            for (Map.Entry<String,Integer> entry : tag.entrySet())
+            for (Map.Entry<String,Integer> entry : tag.entrySet()) {
                 indexing(entry.getKey(), doc, entry.getValue());
-
-            for (Map.Entry<String,List<Integer>> entry : wordMap.entrySet())
-                System.out.println(entry.getKey()+" ---> "+ entry.getValue());
-
-            insertToIndexer(wordMap, url);
+                Phrase_Searching(entry.getKey(), doc, entry.getValue());
+            }
+            optimize_Phrase();
+//          for (Map.Entry<String,List<Integer>> entry : wordMap.entrySet()) {
+//              System.out.println(entry.getKey() + " ---> " + entry.getValue());
+//          }
+            insert("words",wordMap, url);
+            insert("Phrase",wordMap_phrase, url);
             wordMap.clear();
+            wordMap_phrase.clear();
         }
     }
     public static void indexing(String tag, Document doc, int weight) {
@@ -87,19 +94,19 @@ public class Indexer {
     }
 
 
-    public static void insertToIndexer(HashMap<String, List<Integer>> words, String url) {
+    public static void insert(String collec, HashMap<String, List<Integer>> words, String url) {
         for (Map.Entry<String,List<Integer>> entry : words.entrySet()) {
-            if (db.isExists("words", "word", entry.getKey())) {
-                int DF = (int) db.getAttr("words", "word", entry.getKey(), "DF");
-                db.updateDB("words", "word", entry.getKey(), "DF", DF + 1);
+            if (db.isExists(collec, "word", entry.getKey())) {
+                int DF = (int) db.getAttr(collec, "word", entry.getKey(), "DF");
+                db.updateDB(collec, "word", entry.getKey(), "DF", DF + 1);
                 BasicDBObject doc = new BasicDBObject("TF", entry.getValue().get(1));
                 doc.append("weight", entry.getValue().get(0));
                 doc.append("url", url);
-                ArrayList<BasicDBObject> arr = (ArrayList<BasicDBObject>) db.getAttr("words", "word", entry.getKey(), "urls");
+                ArrayList<BasicDBObject> arr = (ArrayList<BasicDBObject>) db.getAttr(collec, "word", entry.getKey(), "urls");
                 System.out.println(arr);
                 arr.add(doc);
                 System.out.println(arr);
-                db.updateDB("words", "word", entry.getKey(), "urls", arr);
+                db.updateDB(collec, "word", entry.getKey(), "urls", arr);
             }
             else {
                 ArrayList<String> keys = new ArrayList<>(){{add("word"); add("urls"); add("DF");}};
@@ -109,7 +116,7 @@ public class Indexer {
                 doc.append("url", url);
                 urls.add(doc);
                 ArrayList<Object> values = new ArrayList<>(){{add(entry.getKey()); add(urls); add(1);}};
-                db.insertToDB("words", keys, values);
+                db.insertToDB(collec, keys, values);
             }
         }
     }

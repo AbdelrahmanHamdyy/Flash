@@ -1,5 +1,6 @@
 package com.company;
 
+import com.mongodb.MongoInterruptedException;
 import com.mongodb.client.*;
 
 import static com.mongodb.client.model.Filters.eq;
