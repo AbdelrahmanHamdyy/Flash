@@ -41,7 +41,8 @@ public class DB {
     public Object getAttr(String collectionName, String key, Object value,String attr) {
         MongoCollection<Document> col = db.getCollection(collectionName);
         Document doc = col.find(eq(key,value)).first();
-        assert doc != null;
+        if(doc == null)
+            return null;
         return doc.get(attr);
     }
     public Object getListOf(String collectionName, String attr)

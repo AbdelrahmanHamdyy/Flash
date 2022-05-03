@@ -6,17 +6,16 @@ import java.io.IOException;
 import java.util.*;
 
 public class Ranker {
-    public static DB db = new DB();
-    public static List<Pair> urls;
-    public static List<Pair> stemmedUrls;
-    public static HashMap<String, Double> sortedMap = new HashMap<>();
-    public static List<String> output = new ArrayList<String>();
-    public Ranker(List<Pair> list, List<Pair> stemmed) {
-        urls = list;
-        stemmedUrls = stemmed;
+    private DB db;
+    private HashMap<String, Double> sortedMap;
+    private List<String> output;
+    public Ranker() {
+        sortedMap = new HashMap<>();
+        output = new ArrayList<String>();
+        db = new DB();
     }
 
-    public static void sortByValue(boolean order) {
+    public void sortByValue(boolean order) {
         List<Map.Entry<String, Double>> list = new LinkedList<Map.Entry<String, Double>>(sortedMap.entrySet());
         Collections.sort(list, new Comparator<Map.Entry<String, Double>>() {
             public int compare(Map.Entry<String, Double> o1, Map.Entry<String, Double> o2) {
@@ -34,7 +33,7 @@ public class Ranker {
         }
     }
 
-    public static void rank(List<Pair> list, int stem) {
+    public void rank(List<Pair> list, int stem) {
         for (Pair P : list) {
             for (Document object : (List<Document>) P.first) {
                 String url = (String) object.get("url");
@@ -56,34 +55,17 @@ public class Ranker {
                     sortedMap.put(url, Priority + stem);
             }
         }
-        sortByValue(false);
     }
 
     // For testing
-    public static void print() {
+    public void print() {
         for (Map.Entry<String, Double> entry : sortedMap.entrySet())
             System.out.println(entry.getKey()+" ---> "+ entry.getValue());
     }
-
-    public static  List<String> getOutput() {
-        return output;
-    }
-
-    public static void main(String[] args) throws IOException {
-        //String query = WebInterface.getInput();
-        queryProcessor myq = new queryProcessor("call");
-        urls = myq.list;
-        stemmedUrls = myq.stemmed;
-        rank(urls, 2);
-        rank(stemmedUrls, 1);
-        print();
+    public List<String> getOutput() {
+        sortByValue(false);
         for (Map.Entry<String, Double> entry : sortedMap.entrySet())
             output.add(entry.getKey());
-        System.out.println(output);
+        return output;
     }
 }
-// query: Computer Engineering Cairo University
-// Outer loop:
-//    Iterates over the lists of each word and DF
-//          Inner loop:
-//              Iterates over each list and calculates priority
