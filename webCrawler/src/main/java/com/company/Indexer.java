@@ -28,13 +28,14 @@ public class Indexer {
 
     public static void setTags() {
         tag.put("title",100);
-        tag.put("h1",10);
-        tag.put("h2",9);
-        tag.put("h3",8);
-        tag.put("h4",7);
+        tag.put("h1",40);
+        tag.put("h2",20);
+        tag.put("h3",10);
+        tag.put("h4",8);
         tag.put("h5",6);
         tag.put("h6",5);
         tag.put("p",4);
+        tag.put("span",3);
     }
 
     public static void main(String[] args) throws IOException {

@@ -1,22 +1,24 @@
 package com.company;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
-public class WebInterface {
-    public static void main(String[] args) throws IOException {
-        // File HTML = new File("D:\\Github\\Search-Engine\\Voice Search\\Display.html");
-        getInput();
+public class WebInterface extends HttpServlet {
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        String name = request.getParameter("q");
+        //String gender = request.getParameter("Gender");
+
+        String message = "you searched for " + name ;
+
+        response.setContentType("text/html");
+
+        String page = "<!doctype html> <html> <body> <h1>" + message +" </h1><h2>kkkkkkkk top<h2> </body></html>";
+        response.getWriter().println(page);
     }
 
-    public static String getInput() throws IOException {
-        //File input = new File("D:\\Github\\Search-Engine\\Voice Search\\index.html");
-        //Document doc = Jsoup.parse(input, "UTF-8", "http://example.com/");
-        Document doc = Indexer.getDocument("http://127.0.0.1:5500/index.html");
-        System.out.println(doc.select("input").val());
-        return null;
-    }
 }

@@ -12,6 +12,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="jsoup-1.14.3" level="project" />
+    <orderEntry type="library" name="servlet-api" level="project" />
     <orderEntry type="library" name="Maven: org.mongodb:mongodb-driver-sync:4.6.0-alpha0" level="project" />
     <orderEntry type="library" name="Maven: org.mongodb:bson:4.6.0-alpha0" level="project" />
     <orderEntry type="library" name="Maven: org.mongodb:mongodb-driver-core:4.6.0-alpha0" level="project" />
@@ -21,5 +22,6 @@
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-log4j12:1.7.13" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.12.0" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains:annotations:23.0.0" level="project" />
   </component>
 </module>

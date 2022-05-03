@@ -10,7 +10,8 @@ public class Ranker {
     public static List<Pair> urls;
     public static List<Pair> stemmedUrls;
     public static HashMap<String, Double> sortedMap = new HashMap<>();
-    Ranker(List<Pair> list, List<Pair> stemmed) {
+    public static List<String> output = new ArrayList<String>();
+    public Ranker(List<Pair> list, List<Pair> stemmed) {
         urls = list;
         stemmedUrls = stemmed;
     }
@@ -45,15 +46,14 @@ public class Ranker {
                 double NormalizedTF = (double) TF / TotalWords;
                 double TF_IDF = NormalizedTF * IDF;
                 int weight = (int) object.get("weight");
-                double Priority = TF_IDF * weight * 100; // Multiplied by 100 to obtain a reasonable range
-                int factor;
-                if (stem == 0) factor = 2; // For original words
-                else factor = 1; // For stemmed words
+                int popularity = (int) db.getAttr("URLs", "url", url, "popularity");
+                double relevance = TF_IDF * weight;
+                double Priority = (10 * relevance) + (2 * (double) popularity / TotalDocuments);
+                System.out.println(url +" "+Priority);
                 if (sortedMap.containsKey(url))
-                    sortedMap.replace(url, Priority + sortedMap.get(url) + (factor * 5)); // Factor * 5 for urls containing
-                                                                                     // different words in the search query
+                    sortedMap.replace(url, Priority + sortedMap.get(url) + (5 * stem));
                 else
-                    sortedMap.put(url, Priority + factor);
+                    sortedMap.put(url, Priority + stem);
             }
         }
         sortByValue(false);
@@ -65,14 +65,21 @@ public class Ranker {
             System.out.println(entry.getKey()+" ---> "+ entry.getValue());
     }
 
+    public static  List<String> getOutput() {
+        return output;
+    }
+
     public static void main(String[] args) throws IOException {
         //String query = WebInterface.getInput();
-        queryProcessor myq = new queryProcessor("offer product");
+        queryProcessor myq = new queryProcessor("call");
         urls = myq.list;
         stemmedUrls = myq.stemmed;
-        rank(urls, 0);
+        rank(urls, 2);
         rank(stemmedUrls, 1);
         print();
+        for (Map.Entry<String, Double> entry : sortedMap.entrySet())
+            output.add(entry.getKey());
+        System.out.println(output);
     }
 }
 // query: Computer Engineering Cairo University
