@@ -2,7 +2,6 @@ package com.company;
 
 import org.bson.Document;
 
-import java.io.IOException;
 import java.util.*;
 
 public class Ranker {

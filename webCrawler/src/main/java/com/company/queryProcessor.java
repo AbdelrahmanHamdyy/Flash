@@ -1,6 +1,8 @@
 package com.company;
 import org.bson.Document;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public class queryProcessor {
@@ -10,6 +12,7 @@ public class queryProcessor {
     public ArrayList<Pair>stemmed;
     private Stemmer stemmer ;
     private Ranker ranker;
+    private HashMap<String,String>paragraphs;
     public queryProcessor(String query)
     {
         list=new ArrayList<Pair>();
@@ -18,9 +21,32 @@ public class queryProcessor {
         words=query.split(" ");
         stemmer= new Stemmer();
         ranker=new Ranker();
+        paragraphs=new HashMap<String,String>();
     }
+    public HashMap<String,String> getParagraphs()
+    {
+        return paragraphs;
+    }
+    private void addParagraph(ArrayList<Document>docs,String word)
+    {
+        for(Document i:docs)
+        {
+            String url= (String) i.get("url");
+            if(paragraphs.containsKey(url))
+            {
+                continue;
+            }
+            String newParagraph = jsoupUtilities.getTagIfContains(url,"p",word);
+            if(!newParagraph.isEmpty())
+            {
+                paragraphs.put(url,newParagraph);
+            }
+        }
+    }
+
     private boolean Process()
     {
+        int success= words.length;
         for(String s:words)
         {
             String lowerCaseString=s.toLowerCase();
@@ -29,7 +55,8 @@ public class queryProcessor {
             ArrayList<String>all=(ArrayList<String>)db.getAttr("stemming","key",str,"array");
             if(all==null)
             {
-                return false;
+                success-=1;
+                continue;
             }
             int stemmedDF=0;
             ArrayList<Document>stemmedDocs=new ArrayList<Document>();
@@ -38,6 +65,7 @@ public class queryProcessor {
                 if(i.equals(lowerCaseString))
                 {
                     ArrayList<Document>docs=(ArrayList<Document>)db.getAttr("words","word",lowerCaseString,"urls");
+                    addParagraph(docs,i);
                     int DF=(int)db.getAttr("words","word",lowerCaseString,"DF");
                     Pair p=new Pair();
                     p.first=docs;
@@ -46,8 +74,8 @@ public class queryProcessor {
                 }
                 else {
                     stemmedDocs.addAll((ArrayList<Document>)db.getAttr("words","word",i,"urls"));
+                    addParagraph(stemmedDocs,i);
                     stemmedDF+=((int)db.getAttr("words","word",i,"DF"));
-                    System.out.println(stemmedDF+"++++++++\n");
                 }
             }
             Pair p=new Pair();
@@ -55,8 +83,9 @@ public class queryProcessor {
             p.second=stemmedDF;
             stemmed.add(p);
         }
-        return true;
+        return success!=0;
     }
+
     private void Rank()
     {
         ranker.rank(list, 2);

@@ -5,8 +5,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class WebInterface extends HttpServlet {
 
@@ -20,10 +20,15 @@ public class WebInterface extends HttpServlet {
         StringBuilder myOutput=new StringBuilder();
         if(output!=null)
         {
+            HashMap<String,String>Paragraphs=myq.getParagraphs();
             int n=output.size();
             for(String i:output)
             {
                 myOutput.append("<a href='"+i+"'>"+i+"</a><br>");
+                if(Paragraphs.containsKey(i))
+                {
+                    myOutput.append("<p>"+Paragraphs.get(i)+"</p>");
+                }
             }
         }
         else
