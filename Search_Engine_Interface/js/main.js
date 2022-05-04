@@ -24,6 +24,7 @@ if(SpeechRecognition) {
     }
     else {
       recognition.stop();
+      info.textContent = 'ex. Sports, Music, Video, Photography';
     }
   }
 
@@ -33,6 +34,7 @@ if(SpeechRecognition) {
     micIcon.classList.add("fa-microphone-slash");
     searchFormInput.focus();
     console.log("Voice activated, SPEAK");
+    info.textContent = 'Voice Commands: "stop recording", "reset input", "go"';
   }
 
   recognition.addEventListener("end", endSpeechRecognition); // <=> recognition.onend = function() {...}
@@ -50,6 +52,7 @@ if(SpeechRecognition) {
       
     if(transcript.toLowerCase().trim()==="stop recording") {
       recognition.stop();
+      info.textContent = 'ex. Sports, Music, Video, Photography';
     }
     else if(!searchFormInput.value) {
       searchFormInput.value = transcript;
