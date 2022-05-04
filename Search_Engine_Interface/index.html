@@ -6,11 +6,14 @@
     <meta name="author" content="colorlib.com">
     <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet" />
     <link href="css/main.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="js/main.js" defer></script>
+    <title>Flash</title>
   </head>
   <body>
     <div class="s130">
-      <form>
+      <form action="request" method="GET" target="_blank" id="search-form">
         <div> 
         <h1 class="Logo"><i class="fa fa-flash" style="margin-right: 10px;"></i>Flash</h1>
        </div>
@@ -21,7 +24,8 @@
                 <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
               </svg>
             </div>
-            <input id="search" type="text" placeholder="What are you looking for?" />
+            <input id="search" placeholder="What are you looking for?" class="query" name="q" type="text" autocomplete="off" autofocus/>
+            <button type="button" id="microphone"><i class="fas fa-microphone"></i></button>
           </div>
           <div class="input-field second-wrap">
             <button onclick="window.location.href='results.html';" class="btn-search" type="button">SEARCH</button>
