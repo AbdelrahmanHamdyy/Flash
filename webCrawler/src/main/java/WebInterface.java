@@ -36,7 +36,7 @@ public class WebInterface extends HttpServlet {
             myOutput.append("<h1>not found</h1>");
         }
         response.setContentType("text/html");
-        String page = "<!doctype html> <html> <body> <h1>" + message +" </h1><h2>kkkkkkkk top<h2>"+myOutput+"***************************** </body></html>";
+        String page = "<!doctype html> <html> <body> <h1>" + message +" </h1>"+myOutput+"***************************** </body></html>";
         response.getWriter().println(page);
     }
 
