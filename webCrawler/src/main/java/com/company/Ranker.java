@@ -8,8 +8,10 @@ public class Ranker {
     private DB db;
     private HashMap<String, Double> sortedMap;
     private List<String> output;
+    private HashMap<String, List<String>> urlResults;
     public Ranker() {
         sortedMap = new HashMap<>();
+        urlResults = new HashMap<>();
         output = new ArrayList<String>();
         db = new DB();
     }
@@ -50,8 +52,15 @@ public class Ranker {
                 System.out.println(url +" "+Priority);
                 if (sortedMap.containsKey(url))
                     sortedMap.replace(url, Priority + sortedMap.get(url) + (5 * stem));
-                else
+                else {
+                    List<String> TitleDesc = new ArrayList<String>();
+                    String title = (String) db.getAttr("URLs", "url", url, "title");
+                    String desc = (String) db.getAttr("URLs", "url", url, "description");
+                    TitleDesc.add(title);
+                    TitleDesc.add(desc);
+                    urlResults.put(url, TitleDesc);
                     sortedMap.put(url, Priority + stem);
+                }
             }
         }
     }
@@ -66,5 +75,9 @@ public class Ranker {
         for (Map.Entry<String, Double> entry : sortedMap.entrySet())
             output.add(entry.getKey());
         return output;
+    }
+
+    public HashMap<String, List<String>> getResults() {
+        return urlResults;
     }
 }

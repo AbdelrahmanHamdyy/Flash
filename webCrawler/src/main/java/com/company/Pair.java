@@ -1,8 +1,8 @@
 package com.company;
 
 public class Pair {
-    Object first;
-    Object second;
+    public Object first;
+    public Object second;
     Pair()
     {
         first=new Object();
