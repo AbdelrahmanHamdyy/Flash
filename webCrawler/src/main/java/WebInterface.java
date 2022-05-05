@@ -17,17 +17,18 @@ public class WebInterface extends HttpServlet {
         String message = "you searched for " + name ;
         queryProcessor myq = new queryProcessor(name);
         Pair all= myq.Run();
-        List<String> output=(List<String>)all.first;
-        HashMap<String, ArrayList<String>>results=(HashMap<String, ArrayList<String>>)all.second;
         StringBuilder myOutput=new StringBuilder();
-        if(output!=null)
+        if(all!=null)
         {
+            List<String> output=(List<String>)all.first;
+            HashMap<String, ArrayList<String>>results=(HashMap<String, ArrayList<String>>)all.second;
             int n=output.size();
             for(String i:output)
             {
+                myOutput.append("<h4>"+results.get(i).get(0)+"</h4>");
                 myOutput.append("<a href='"+i+"'>"+i+"</a><br>");
-                myOutput.append("<h5>"+results.get(i).get(0)+"</h5>");
                 myOutput.append("<p>"+results.get(i).get(1)+"</p>");
+                myOutput.append("<hr>");
             }
         }
         else
@@ -48,7 +49,7 @@ public class WebInterface extends HttpServlet {
                 "\n" +
                 "<body>\n" +
                 "    <nav class=\"navigation\">\n" +
-                "        <form action=\"request\">\n" +
+                "        <form action=\"request\" method=\"GET\">\n" +
                 "            <div>\n" +
                 "                <h1 class=\"Logo\"><i class=\"fa fa-flash\"></i>Flash</h1>\n" +
                 "            </div>\n" +
@@ -62,7 +63,7 @@ public class WebInterface extends HttpServlet {
                 "                    <input value=\""+name+"\" id=\"search\" name=\"q\" type=\"text\" placeholder=\"What are you looking for?\" />\n" +
                 "                </div>\n" +
                 "                <div class=\"input-field second-wrap\">\n" +
-                "                    <button class=\"btn-search\" onclick=\"window.location.href='results.html';\" type=\"button\">SEARCH</button>\n" +
+                "                    <button class=\"btn-search\" type=\"submit\">SEARCH</button>\n" +
                 "                </div>\n" +
                 "            </div>\n" +
                 "        </form>\n" +
