@@ -22,8 +22,17 @@ public class Indexer {
     public static Stemmer stemmer = new Stemmer();
 
     public static Document getDocument(String url) throws IOException {
-        Connection connect= Jsoup.connect(url);
-        return connect.get();
+        try {
+            Connection connect= Jsoup.connect(url);
+            Document doc=connect.get();
+            if(connect.response().statusCode()==200)
+            {
+                return doc;
+            }
+        } catch (IOException e) {
+            return null;
+        }
+        return null;
     }
 
     public static void setTags() {
@@ -35,7 +44,7 @@ public class Indexer {
         tag.put("h5",6);
         tag.put("h6",5);
         tag.put("p",4);
-        tag.put("span",3);
+        //tag.put("span",3);
     }
 
     public static void main(String[] args) throws IOException {
@@ -45,18 +54,20 @@ public class Indexer {
         for (int i = 0; i < Count; i++) {
             String url = (String)db.getAttr("URLs","id", i,"url");
             Document doc = getDocument(url);
-            for (Map.Entry<String,Integer> entry : tag.entrySet()) {
-                indexing(entry.getKey(), doc, entry.getValue());
-                Phrase_Searching(entry.getKey(), doc, entry.getValue());
-            }
-            optimize_Phrase();
+            if (doc != null) {
+                for (Map.Entry<String, Integer> entry : tag.entrySet()) {
+                    indexing(entry.getKey(), doc, entry.getValue());
+                    Phrase_Searching(entry.getKey(), doc, entry.getValue());
+                }
+                optimize_Phrase();
 //          for (Map.Entry<String,List<Integer>> entry : wordMap.entrySet()) {
 //              System.out.println(entry.getKey() + " ---> " + entry.getValue());
 //          }
-            insert("words",wordMap, url);
-            insert("Phrase",wordMap_phrase, url);
-            wordMap.clear();
-            wordMap_phrase.clear();
+                insert("words", wordMap, url);
+                insert("Phrase", wordMap_phrase, url);
+                wordMap.clear();
+                wordMap_phrase.clear();
+            }
         }
     }
     public static void indexing(String tag, Document doc, int weight) {
@@ -93,7 +104,6 @@ public class Indexer {
                 }}); // Increase weight & TF of each word
             }
     }
-
 
     public static void insert(String collec, HashMap<String, List<Integer>> words, String url) {
         for (Map.Entry<String,List<Integer>> entry : words.entrySet()) {

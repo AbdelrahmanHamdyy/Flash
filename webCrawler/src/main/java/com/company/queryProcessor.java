@@ -64,7 +64,7 @@ public class queryProcessor {
 
     private void Rank()
     {
-        ranker.rank(list, 2);
+        ranker.rank(list, 3);
         ranker.rank(stemmed, 1);
 
     }
@@ -76,8 +76,15 @@ public class queryProcessor {
             Pair p=new Pair();
             p.first=ranker.getOutput();
             p.second=ranker.getResults();
+            //ranker.print();
+            //System.out.println(p.first);
             return p;
         }
         return null;
     }
+
+    /*public static void main(String[] args) {
+        queryProcessor q = new queryProcessor("offer product");
+        q.Run();
+    }*/
 }

@@ -80,4 +80,5 @@ public class Ranker {
     public HashMap<String, List<String>> getResults() {
         return urlResults;
     }
+
 }
