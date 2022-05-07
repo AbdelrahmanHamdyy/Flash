@@ -11,7 +11,7 @@ body {
   justify-content: center;
   font-family: 'Poppins', sans-serif;
   width:100%;
-  background-image:linear-gradient(rgba(31, 28, 53, 0.7),rgba(30, 36, 64, 0.7)), url("../images/FirstBG.jpg");
+  background-image:linear-gradient(rgba(31, 28, 53, 0.7),rgba(18, 23, 46, 0.7)), url("../images/BG2.jpg");
   background-size: cover;
   position: relative;
 }
@@ -117,19 +117,20 @@ body {
   height: 100%;
   width: 100%;
   white-space: nowrap;
-  font-size: 18px;
+  font-size: 20px;
+  font-family: cursive;
   color: #fff;
   border: 0;
   cursor: pointer;
   position: relative;
   z-index: 0;
-  background: #0003c0;
-  transition: all .5s ease-out, color .5s ease-out;
+  background: #00366b;
+  transition: all .3s ease-out, color .5s ease-out;
   font-weight: 300;
 }
 
 .s130 form .inner-form .input-field.second-wrap .btn-search:hover {
-  background: #190094;
+  background: #012a53;
 }
 
 .s130 form .inner-form .input-field.second-wrap .btn-search:focus {
