@@ -11,14 +11,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 
-import static com.company.Phrase_Searching.*;
-
 public class Indexer {
     public static DB db = new DB();
     public static Map<String, Integer> tag = new HashMap<>();
     public static List<String> stopWords = new ArrayList<>();
     public static HashMap<String, List<Integer>> wordMap = new HashMap<>();
-    public static HashMap<String, List<Integer>> wordMap_phrase = new HashMap<>();
+    public static HashMap<String, List<Integer>> indices = new HashMap<>();
     public static Stemmer stemmer = new Stemmer();
 
     public static Document getDocument(String url) throws IOException {
@@ -44,7 +42,6 @@ public class Indexer {
         tag.put("h5",6);
         tag.put("h6",5);
         tag.put("p",4);
-        //tag.put("span",3);
     }
 
     public static void main(String[] args) throws IOException {
@@ -57,16 +54,10 @@ public class Indexer {
             if (doc != null) {
                 for (Map.Entry<String, Integer> entry : tag.entrySet()) {
                     indexing(entry.getKey(), doc, entry.getValue());
-                    Phrase_Searching(entry.getKey(), doc, entry.getValue());
                 }
-                optimize_Phrase();
-//          for (Map.Entry<String,List<Integer>> entry : wordMap.entrySet()) {
-//              System.out.println(entry.getKey() + " ---> " + entry.getValue());
-//          }
-                insert("words", wordMap, url);
-                insert("Phrase", wordMap_phrase, url);
+                insertToIndexer(wordMap, url);
                 wordMap.clear();
-                wordMap_phrase.clear();
+                indices.clear();
             }
         }
     }
@@ -74,6 +65,7 @@ public class Indexer {
         String temp_text =doc.select(tag).text();
         String[] text_split = temp_text.split(" "); // split the text
         text_split = removeStopWords(text_split);
+        int pageIndex = 0;
         for (String s : text_split)
             if (!s.equals("")) {
                 String lowerCaseString=s.toLowerCase();
@@ -98,26 +90,31 @@ public class Indexer {
                     add(0);
                     add(0);
                 }}); // For initial insertion
+                int finalPageIndex = pageIndex;
+                indices.putIfAbsent(lowerCaseString, new ArrayList<Integer>());
                 wordMap.put(lowerCaseString, new ArrayList<>() {{
                     add(wordMap.get(lowerCaseString).get(0) + weight);
                     add(wordMap.get(lowerCaseString).get(1) + 1);
                 }}); // Increase weight & TF of each word
+                indices.get(lowerCaseString).add(pageIndex);
+                pageIndex++;
             }
     }
 
-    public static void insert(String collec, HashMap<String, List<Integer>> words, String url) {
+    public static void insertToIndexer(HashMap<String, List<Integer>> words, String url) {
         for (Map.Entry<String,List<Integer>> entry : words.entrySet()) {
-            if (db.isExists(collec, "word", entry.getKey())) {
-                int DF = (int) db.getAttr(collec, "word", entry.getKey(), "DF");
-                db.updateDB(collec, "word", entry.getKey(), "DF", DF + 1);
+            if (db.isExists("words", "word", entry.getKey())) {
+                int DF = (int) db.getAttr("words", "word", entry.getKey(), "DF");
+                db.updateDB("words", "word", entry.getKey(), "DF", DF + 1);
                 BasicDBObject doc = new BasicDBObject("TF", entry.getValue().get(1));
                 doc.append("weight", entry.getValue().get(0));
                 doc.append("url", url);
-                ArrayList<BasicDBObject> arr = (ArrayList<BasicDBObject>) db.getAttr(collec, "word", entry.getKey(), "urls");
+                doc.append("positions", indices.get(entry.getKey()));
+                ArrayList<BasicDBObject> arr = (ArrayList<BasicDBObject>) db.getAttr("words", "word", entry.getKey(), "urls");
                 System.out.println(arr);
                 arr.add(doc);
                 System.out.println(arr);
-                db.updateDB(collec, "word", entry.getKey(), "urls", arr);
+                db.updateDB("words", "word", entry.getKey(), "urls", arr);
             }
             else {
                 ArrayList<String> keys = new ArrayList<>(){{add("word"); add("urls"); add("DF");}};
@@ -125,9 +122,10 @@ public class Indexer {
                 BasicDBObject doc = new BasicDBObject("TF", entry.getValue().get(1));
                 doc.append("weight", entry.getValue().get(0));
                 doc.append("url", url);
+                doc.append("positions", indices.get(entry.getKey()));
                 urls.add(doc);
                 ArrayList<Object> values = new ArrayList<>(){{add(entry.getKey()); add(urls); add(1);}};
-                db.insertToDB(collec, keys, values);
+                db.insertToDB("words", keys, values);
             }
         }
     }

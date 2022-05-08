@@ -1,4 +1,4 @@
-package com.company;
+/* package com.company;
 
 import com.mongodb.BasicDBObject;
 import org.apache.commons.lang3.ArrayUtils;
@@ -69,4 +69,4 @@ public class Phrase_Searching {
             }
         }
     }
-}
+} */
