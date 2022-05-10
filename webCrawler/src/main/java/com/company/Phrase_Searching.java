@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class Phrase_Searching {
-    private static DB db;
+    private static DB db = new DB();
     private static Map<String, Integer> count = new HashMap<>();
     private static Map<String, Integer> URL = new HashMap<>();
     private static  Map<String, ArrayList<ArrayList<Integer> >> indx = new HashMap<>();
@@ -62,22 +62,33 @@ public class Phrase_Searching {
 //        }
 //    }
 public static void main(String[] args) {
-    String[]word = new String[0];
+    String[]word = new String[4];
+    word[0] = " ";
+    word[1] = "Cloud";
+    word[2] = "Platform";
+    word[3] = " ";
+
     phase(word);
+    System.out.println("Phrase");
+    for (Map.Entry<String, Integer> entry : URL.entrySet()) {
+        System.out.println(entry.getKey() + " " + entry.getValue());
+    }
 }
-    public static void phase( String[]words)
+    public static void phase(String[]words)
     {
         int target =words.length-2;// delete "";
         for(int i=1;i<words.length-1;i++)
         {
             String lowerCaseString=words[i].toLowerCase();
           List<Document>docs=(List<Document>)db.getAttr("words","word",lowerCaseString,"urls");
+            // System.out.println(docs);
             for (Document object :  docs) {
+               // System.out.println(object);
                 String url = (String) object.get("url");
-                String positions = "positions";
                 ArrayList<Integer> post =(ArrayList<Integer>) object.get("positions");
                 count.putIfAbsent(url, 0);
                 count.put(url,count.get(url) +1 );
+                indx.putIfAbsent(url, new ArrayList<ArrayList<Integer>>());
                 indx.get(url).add(post);
                 if( target==count.get(url)){
                     URL.putIfAbsent(url, 0);
@@ -87,6 +98,9 @@ public static void main(String[] args) {
         check();
     }
     public static void check (){
+        for (Map.Entry<String, ArrayList<ArrayList<Integer> >> entry : indx.entrySet()) {
+           // System.out.println(entry.getKey() + " " + entry.getValue());
+        }
         for (Map.Entry<String, Integer> entry : URL.entrySet()) {
             ArrayList<Integer> first =indx.get(entry.getKey()).get(0);
             int n=indx.get(entry.getKey()).size();
@@ -103,7 +117,12 @@ public static void main(String[] args) {
                 if(flag)
                     count++;
             }
-            URL.put(entry.getKey(),count );
+            if (count > 0)
+                URL.put(entry.getKey(),count);
+            else {
+                URL.remove(entry.getKey());
+            }
         }
+
     }
 }

@@ -46,10 +46,9 @@ public class Ranker {
                 double NormalizedTF = (double) TF / TotalWords;
                 double TF_IDF = NormalizedTF * IDF;
                 int weight = (int) object.get("weight");
-                int popularity = (int) db.getAttr("URLs", "url", url, "popularity");
+                // int popularity = (int) db.getAttr("URLs", "url", url, "popularity");
                 double relevance = TF_IDF * weight;
-                double Priority = (10 * relevance) + (2 * (double) popularity / TotalDocuments);
-                System.out.println(url +" "+Priority);
+                double Priority = (10 * relevance);
                 if (sortedMap.containsKey(url))
                     sortedMap.replace(url, Priority + sortedMap.get(url) + (5 * stem));
                 else {
@@ -65,11 +64,14 @@ public class Ranker {
         }
     }
 
+
     // For testing
     public void print() {
         for (Map.Entry<String, Double> entry : sortedMap.entrySet())
             System.out.println(entry.getKey()+" ---> "+ entry.getValue());
     }
+
+    // Output to query processor
     public List<String> getOutput() {
         sortByValue(false);
         for (Map.Entry<String, Double> entry : sortedMap.entrySet())
