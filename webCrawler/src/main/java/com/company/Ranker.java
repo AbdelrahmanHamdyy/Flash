@@ -46,11 +46,14 @@ public class Ranker {
                 double NormalizedTF = (double) TF / TotalWords;
                 double TF_IDF = NormalizedTF * IDF;
                 int weight = (int) object.get("weight");
-                // int popularity = (int) db.getAttr("URLs", "url", url, "popularity");
+                int popularity = (int) db.getAttr("URLs", "url", url, "popularity");
                 double relevance = TF_IDF * weight;
-                double Priority = (10 * relevance);
-                if (sortedMap.containsKey(url))
+                double Priority = relevance * popularity;
+                if (sortedMap.containsKey(url)) {
                     sortedMap.replace(url, Priority + sortedMap.get(url) + (5 * stem));
+                    // We multiply the stem factor by 5 if the url is already found because it makes more sense to
+                    // give urls that contain more words from the search query a higher priority to be displayed
+                }
                 else {
                     List<String> TitleDesc = new ArrayList<String>();
                     String title = (String) db.getAttr("URLs", "url", url, "title");
