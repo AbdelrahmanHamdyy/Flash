@@ -1,0 +1,56 @@
+[{
+  "_id": {
+    "$oid": "626d1ff01bd353f5004bdc92"
+  },
+  "url": "http://www.octoparse.com/"
+},{
+  "_id": {
+    "$oid": "626d20091bd353f5004bdc93"
+  },
+  "url": "https://80legs.com/"
+},{
+  "_id": {
+    "$oid": "626d20331bd353f5004bdc94"
+  },
+  "url": "https://www.parsehub.com/"
+},{
+  "_id": {
+    "$oid": "626d20501bd353f5004bdc95"
+  },
+  "url": "http://visualscraper.blogspot.hk/"
+},{
+  "_id": {
+    "$oid": "626d206d1bd353f5004bdc96"
+  },
+  "url": "https://contentgrabber.com/"
+},{
+  "_id": {
+    "$oid": "626d20a01bd353f5004bdc97"
+  },
+  "url": "http://www.heliumscraper.com/en/index.php?p=home"
+},{
+  "_id": {
+    "$oid": "626d20b41bd353f5004bdc98"
+  },
+  "url": "https://www.cyotek.com/cyotek-webcopy"
+},{
+  "_id": {
+    "$oid": "626d20ce1bd353f5004bdc99"
+  },
+  "url": "https://www.httrack.com/"
+},{
+  "_id": {
+    "$oid": "626d20ea1bd353f5004bdc9a"
+  },
+  "url": "https://chrome.google.com/webstore/detail/scraper/mbigbapnjcgaffohmbkdlecaccepngjd"
+},{
+  "_id": {
+    "$oid": "626d21031bd353f5004bdc9b"
+  },
+  "url": "https://addons.mozilla.org/en-US/firefox/addon/outwit-hub/"
+},{
+  "_id": {
+    "$oid": "626d21481bd353f5004bdc9c"
+  },
+  "url": "https://scrapinghub.com/"
+}]
