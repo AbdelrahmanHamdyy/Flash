@@ -28,8 +28,8 @@ public class WebInterface extends HttpServlet {
             {
                 myOutput.append("<div class='search-item'>");
                 myOutput.append("<h4 class='mb-1 Link'><a href='"+i+"'>"+results.get(i).get(0)+"</a></h4>");
-                myOutput.append("<a class='font-13 text-success mb-3'>"+i+"</a><br>");
-                myOutput.append("<p class='mb-0 text-muted'>"+results.get(i).get(1)+"</p>");
+                myOutput.append("<p style=\"color: #00ddb1; margin-bottom: 0;\">"+i+"</p>");
+                myOutput.append("<p class='mb-0 text-muted' style=\"margin-top: 0;\">"+results.get(i).get(1)+"</p>");
                 myOutput.append("</div>");
             }
         }
@@ -173,10 +173,10 @@ public class WebInterface extends HttpServlet {
                 "    color: #8ab4f8;\n" +
                 "}\n" +
                 ".mb-1:hover{\n" +
-                "    transform: scale(1.02);\n" +
+                "    transform: scale(1.015);\n" +
                 "}\n" +
                 "a {\n" +
-                "    color: #4995ff;\n" +
+                "    color: #8ab4f8;\n" +
                 "    text-decoration: none;\n" +
                 "    background-color: transparent;\n" +
                 "    transition: 0.5s;\n" +
