@@ -1,8 +1,6 @@
 package com.company;
 import org.bson.Document;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 public class queryProcessor {
@@ -12,16 +10,30 @@ public class queryProcessor {
     public ArrayList<Pair>stemmed;
     private Stemmer stemmer ;
     private Ranker ranker;
+    boolean isPhrase;
+    private Phrase_Searching phraser;
+
     public queryProcessor(String query)
     {
+        if(query.contains("\""))
+        {
+            isPhrase=true;
+            query=query.substring(1,query.length()-1);
+            phraser=new Phrase_Searching();
+            System.out.println(query);
+        }
+        else
+        {
+            isPhrase=false;
+            stemmed=new ArrayList<Pair>();
+            stemmer= new Stemmer();
+            ranker=new Ranker();
+            db= new DB();
+        }
         list=new ArrayList<Pair>();
-        stemmed=new ArrayList<Pair>();
-        db= new DB();
         words=query.split(" ");
-        stemmer= new Stemmer();
-        ranker=new Ranker();
-    }
 
+    }
     private boolean Process()
     {
         int success= words.length;
@@ -70,21 +82,31 @@ public class queryProcessor {
     }
     public Pair Run()
     {
-        if(Process())
+        Pair p=new Pair();
+        if(isPhrase)
         {
-            Rank();
-            Pair p=new Pair();
-            p.first=ranker.getOutput();
-            p.second=ranker.getResults();
-            //ranker.print();
-            //System.out.println(p.first);
-            return p;
+            if(phraser.phrase(words))
+            {
+                p.first=phraser.getOutput();
+                p.second=phraser.getResults();
+                if(((List<String>)p.first).size()==0)
+                    return null;
+                return p;
+            }
+        }
+        else
+        {
+            if(Process())
+            {
+                Rank();
+                p.first=ranker.getOutput();
+                p.second=ranker.getResults();
+                //ranker.print();
+                //System.out.println(p.first);
+                return p;
+            }
         }
         return null;
     }
 
-    /*public static void main(String[] args) {
-        queryProcessor q = new queryProcessor("offer product");
-        q.Run();
-    }*/
 }
