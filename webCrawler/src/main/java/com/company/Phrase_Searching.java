@@ -14,6 +14,7 @@ import java.util.*;
 
 public class Phrase_Searching {
     private  DB db = new DB();
+    //private  Indexer indexer = new Indexer();
     private   Map<String, Integer> count = new HashMap<>();
     private   Map<String, Integer> URL = new HashMap<>();
     private  Map<String, Integer> temp = new HashMap<>();
@@ -21,21 +22,26 @@ public class Phrase_Searching {
     private  HashMap<String, List<String>> Results= new HashMap<>();
     private   List<String> link=new ArrayList<String>();
 
-    public static void main(String[] args) {
+    public static  void main(String[] args) {
         String[]word = new String[4];
-        word[0] = " ";
-        word[1] = "Download";
-        word[2] = "scraped";
-        word[3]=" ";
+        word[0] = "Deal";
+        word[1] = "With";
+        word[2] = "With";
+        word[3] = "With";
 
-//    phase(word);
-//    System.out.println("Phrase");
-//    if(Results==null)
-//        return;
+//        phase(word);
+//        System.out.println("Phrase");
+//        if(Results==null)
+//            return;
+//        for (Map.Entry<String, List<String>> entry : Results.entrySet()){
+//            //
+//            System.out.println(entry.getKey()+" "+entry.getValue());
+//        }
     }
-    public  boolean  phrase(String[]words)
-    {
-        int target =words.length;// delete "";
+    public  boolean  phrase(String[]words) throws IOException {
+        Indexer.ReadStopWords();
+        words= Indexer.removeStopWords(words);
+        int target =words.length;
         boolean flag=false;
         for(int i=0;i<words.length;i++)
         {

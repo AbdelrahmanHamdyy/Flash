@@ -1,5 +1,7 @@
 package com.company;
 import org.bson.Document;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,8 +82,7 @@ public class queryProcessor {
         ranker.rank(stemmed, 1);
 
     }
-    public Pair Run()
-    {
+    public Pair Run() throws IOException {
         Pair p=new Pair();
         if(isPhrase)
         {

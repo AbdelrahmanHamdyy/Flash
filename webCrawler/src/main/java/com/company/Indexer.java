@@ -144,10 +144,10 @@ public class Indexer {
         }
     }
 
-    private static String[] removeStopWords (String[] M){
+    public static String[] removeStopWords (String[] M){
         for(String word : stopWords) {
             for (int i = 0; i < M.length; i++) {
-                M[i] = M[i].replaceAll("[^a-zA-Z]","");
+                M[i] = M[i].replaceAll("[^a-zA-Z0-9]","");
                 if (M[i].toLowerCase(Locale.ROOT).equals(word))
                     M = ArrayUtils.remove(M, i);
             }

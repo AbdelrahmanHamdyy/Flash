@@ -14,9 +14,6 @@ public class CompactString {
         String title = doc.title();
         compact+= comp ("p", doc);
         if(count_string != 50) {
-            compact += comp ("span", doc);
-        }
-        if(count_string != 50) {
             compact+= comp ("div", doc);
         }
         System.out.println(compact);
