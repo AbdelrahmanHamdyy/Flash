@@ -139,7 +139,7 @@ public class WebInterface extends HttpServlet {
                 "<style type=\"text/css\">\n" +
                 "body{\n" +
                 "    margin-top:20px;\n" +
-                "    background-color:rgba(18, 23, 46);\n" +
+                "    background-color:#12172e;\n" +
                 "}\n" +
                 ".text-center{\n" +
                 "    color:white\n" +
@@ -158,6 +158,10 @@ public class WebInterface extends HttpServlet {
                 "    -webkit-box-shadow: none;\n" +
                 "    box-shadow: none;\n" +
                 "    -moz-box-shadow: none\n" +
+                "}\n" +
+                ".badge-success {\n" +
+                "    color: #fff;\n" +
+                "    background-color: #211439;\n" +
                 "}\n" +
                 ".search-result-box .search-item {\n" +
                 "    padding-bottom: 20px;\n" +

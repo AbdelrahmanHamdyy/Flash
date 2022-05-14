@@ -46,12 +46,9 @@ public class Ranker {
                 int TF = (int) object.get("TF");
                 double NormalizedTF = (double) TF / TotalWords;
                 double TF_IDF = NormalizedTF * IDF;
-                int pid=-1;
+                int pid = -1;
                 if(object.containsKey("paragraphID"))
-                {
-                     pid=(int)object.get("paragraphID");
-                }
-
+                     pid = (int) object.get("paragraphID");
                 int weight = (int) object.get("weight");
                 int popularity = (int) db.getAttr("URLs", "url", url, "popularity");
                 double relevance = TF_IDF * weight;
@@ -65,9 +62,9 @@ public class Ranker {
                     List<String> TitleDesc = new ArrayList<String>();
                     String title = (String) db.getAttr("URLs", "url", url, "title");
                     TitleDesc.add(title);
-                    String desc="No paragarphs found";
-                    if(pid!=-1)
-                        desc=(String) db.getAttr("Paragraphs", "id", pid, "content");
+                    String desc="No Paragraphs Found!";
+                    if(pid != -1)
+                        desc = (String) db.getAttr("Paragraphs", "id", pid, "content");
                     TitleDesc.add(desc);
                     urlResults.put(url, TitleDesc);
                     sortedMap.put(url, Priority + stem);
