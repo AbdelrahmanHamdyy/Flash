@@ -26,6 +26,13 @@ public class queryProcessor {
         }
         else
         {
+            System.out.println("*************************************************");
+            System.out.println("*************************************************");
+            System.out.println("*************************************************");
+            System.out.println("*************************************************");
+            System.out.println("*************************************************");
+            System.out.println("*************************************************");
+            System.out.println("*************************************************");
             isPhrase=false;
             stemmed=new ArrayList<Pair>();
             stemmer= new Stemmer();
@@ -41,12 +48,14 @@ public class queryProcessor {
         int success= words.length;
         for(String s:words)
         {
+            System.out.println(s+"***********************************************************************************************");
             String lowerCaseString=s.toLowerCase();
             String str=stemmer.Stemming(lowerCaseString);
             System.out.println(str);
             ArrayList<String>all=(ArrayList<String>)db.getAttr("stemming","key",str,"array");
             if(all==null)
             {
+                System.out.println("all is null***********************************************************************************************");
                 success-=1;
                 continue;
             }

@@ -69,7 +69,7 @@ public class WebInterface extends HttpServlet {
                 "                                    </div>\n" +
                 "                                </div>\n" +
                 "                                <div class=\"mt-4 text-center\">\n" +
-                "                                    <h4>Search Results For \"" + name + "\"</h4></div>\n" +
+                "                                    <h4>Search Results For " + name + "</h4></div>\n" +
                 "                            </div>\n" +
                 "                        </div>\n" +
                 "                    </div>\n" +

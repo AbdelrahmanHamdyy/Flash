@@ -112,11 +112,11 @@ public class Crawler {
             keys.add("CompactString");values.add(C_String);
             keys.add("popularity");values.add(1);
             String title = doc.select("title").text();
-            String description = doc.select("meta[name=description]").attr("content");
+            //String description = doc.select("meta[name=description]").attr("content");
             String link= doc.body().text();
             NumberOfWords=link.length();
             keys.add("title"); values.add(title);
-            keys.add("description"); values.add(description);
+            //keys.add("description"); values.add(description);
             keys.add("NumberOfWords");values.add(NumberOfWords);
             db.insertToDB("URLs",keys,values);
             numberOfLinks++;
