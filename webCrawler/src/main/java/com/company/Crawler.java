@@ -37,7 +37,7 @@ public class Crawler {
                     crawl(myLinks.get(i));
                 } catch (IOException e) {
                     //e.printStackTrace();
-                    System.out.println("~~~~~~");
+                    System.out.println("~~");
                 }
             }
         }
@@ -111,6 +111,8 @@ public class Crawler {
             keys.add("id");values.add(numberOfLinks);
             keys.add("CompactString");values.add(C_String);
             keys.add("popularity");values.add(1);
+            ArrayList<Integer>paragraphs=new ArrayList<Integer>();
+            keys.add("paragraphs");values.add(paragraphs);
             String title = doc.select("title").text();
             //String description = doc.select("meta[name=description]").attr("content");
             String link= doc.body().text();
@@ -147,7 +149,7 @@ public class Crawler {
         return null;
     }
 
-    public void setCounter() {
+    private void setCounter() {
         if(db.isExists("Globals","key","counter"))
             return;
         ArrayList<String> keys = new ArrayList<>();

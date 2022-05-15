@@ -22,7 +22,7 @@ public class Indexer {
     public static Stemmer stemmer = new Stemmer();
     public static int numberOfParagraphs;
     public static HashMap<String,Integer>wordParagraphsMapping;
-
+    public static ArrayList<Integer>paragraphs=new ArrayList<Integer>();
     public static Document getDocument(String url) throws IOException {
         try {
             Connection connect= Jsoup.connect(url);
@@ -47,20 +47,34 @@ public class Indexer {
         tag.put("h6",5);
         tag.put("p",4);
     }
+    public static void setCounter() {
+        if(db.isExists("Globals","key","paragraphsCounter"))
+            return;
+        ArrayList<String> keys = new ArrayList<>();
+        keys.add("key");
+        keys.add("value");
+        ArrayList<Object> values = new ArrayList<>();
+        values.add("paragraphsCounter");
+        values.add(0);
+        db.insertToDB("Globals", keys, values);
+    }
 
     public static void main(String[] args) throws IOException {
         setTags();
         ReadStopWords();
         wordParagraphsMapping=new HashMap<String,Integer>();
+        setCounter();
         numberOfParagraphs=(int)db.getAttr("Globals", "key","paragraphsCounter","value" );
         int Count = (int)db.getAttr("Globals", "key","counter","value" );
         for (int i = 0; i < Count; i++) {
             String url = (String)db.getAttr("URLs","id", i,"url");
             Document doc = getDocument(url);
+            paragraphs.clear();
             if (doc != null) {
                 for (Map.Entry<String, Integer> entry : tag.entrySet()) {
                     indexing(entry.getKey(), doc, entry.getValue());
                 }
+                db.updateDB("URLs","url",url,"paragraphs",paragraphs);
                 insertToIndexer(wordMap, url);
                 wordParagraphsMapping.clear();
                 wordMap.clear();
@@ -74,6 +88,7 @@ public class Indexer {
         for (Element i : elements) {
             ArrayList<String> keys1 = new ArrayList<String>();
             ArrayList<Object> values1 = new ArrayList<Object>();
+            paragraphs.add(numberOfParagraphs);
             keys1.add("id");values1.add(numberOfParagraphs++);
             keys1.add("content");values1.add(i.text());
             db.insertToDB("Paragraphs",keys1,values1);
