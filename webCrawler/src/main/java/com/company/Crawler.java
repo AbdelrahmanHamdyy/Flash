@@ -93,8 +93,12 @@ public class Crawler {
                     t.interrupt();
                 return;
             }
-//            if(!CheckRobots(url))
-//                return;
+            try {
+                if(!CheckRobots(url))
+                    return;
+            } catch(Exception e) {
+                System.out.println("(Robots.txt): Exception Thrown!");
+            }
             doc = request(url);
             if(doc == null)
                 return;
