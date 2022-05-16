@@ -8,6 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
@@ -20,7 +23,9 @@
                         <div class="col-md-8 offset-md-2">
                             <div class="pt-3 pb-4">
                                 <div class="input-group">
+                                    <h1 class="Logo"><a href="localhost:8080"><i class="fa fa-flash"></i>Flash</a></h1>
                                     <input type="text" id="" name="" class="form-control" value="Admin Dashboard">
+                                    <button type="button" id="microphone"><i class="fas fa-microphone"></i></button>
                                     <div class="input-group-append">
                                         <button type="button" class="btn waves-effect waves-light btn-custom"><i class="fa fa-search mr-1"></i> Search</button>
                                     </div>
@@ -121,9 +126,49 @@ body{
     margin-top:20px;
     background:#072543;
 }
+
+h1{
+    text-align:center;
+    background:linear-gradient(to right,#84c2f7,#6ebcff,#50adff,#2197ff,#0058af);
+    background-size:400%;
+    font-family: poppins;
+    font-weight: bold;
+    -webkit-text-fill-color:transparent;
+    -webkit-background-clip: text;
+    animation: animate 20s ease infinite;
+    animation-direction: reverse;
+    font-size: 27px;
+    margin-right: 10px;
+    margin-top: 5px;
+  }
+
+  #microphone {
+    position: relative;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: transparent;
+    outline: none;
+    border: none;
+    width: 3rem;
+    text-align: center;
+    font-size: 1.75rem;
+    cursor: pointer;
+    color: rgba(75, 58, 58, 0.615);
+    margin-right: 10px;
+  }
+.form-control {
+    border-left: 1px solid black;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+.input-group-append {
+    height: 38px;
+}
 .text-center{
     color:white
 }
+
 .card-box {
     padding: 20px;
     border-radius: 3px;

@@ -17,25 +17,49 @@ public class WebInterface extends HttpServlet {
         String message = "you searched for " + name ;
         queryProcessor myq = new queryProcessor(name);
         Pair all= myq.Run();
-        StringBuilder myOutput=new StringBuilder();
+        String[] myOutput;
+        StringBuilder Results = new StringBuilder();
         int n = 0;
+        int NumberOfPages = 0;
+        StringBuilder buttons = new StringBuilder();
         if(all!=null)
         {
             List<String> output=(List<String>)all.first;
             HashMap<String, ArrayList<String>>results=(HashMap<String, ArrayList<String>>)all.second;
             n=output.size();
-            for(String i:output)
+            NumberOfPages = (int) Math.ceil((float) n / 10);
+            myOutput = new String[NumberOfPages];
+            int index = 0;
+            int i = 0;
+            while (i < n)
             {
-                myOutput.append("<div class='search-item'>");
-                myOutput.append("<h4 class='mb-1 Link'><a href='"+i+"'>"+results.get(i).get(0)+"</a></h4>");
-                myOutput.append("<p style=\"color: #00ddb1; margin-bottom: 0;\">"+i+"</p>");
-                myOutput.append("<p class='mb-0 text-muted' style=\"margin-top: 0;\">"+results.get(i).get(1)+"</p>");
-                myOutput.append("</div>");
+                if (index != 0)
+                    myOutput[index] = "<div hidden id=\"shown" + index + "\">";
+                else
+                    myOutput[index] = "<div id=\"shown" + index + "\">";
+                int loopCount = 10;
+                if (index == NumberOfPages - 1) {
+                    loopCount = n % 10;
+                    if (loopCount == 0)
+                        loopCount = 10;
+                }
+                for (int j = 0; j < loopCount; j++) {
+                    myOutput[index] += "<div class='search-item'> <h4 class='mb-1 Link'><a href='" + output.get(i) + "'> " + results.get(output.get(i)).get(0) +
+                            "</a></h4> <p style=\"color: #00ddb1; margin-bottom: 0;\">" + output.get(i)
+                            + "</p> <p class='mb-0 text-muted' style=\"margin-top: 0;\">" + results.get(output.get(i)).get(1) + "</p> </div>";
+                    i++;
+                }
+                myOutput[index] += "</div>";
+                index++;
+            }
+            for (int j = 0; j < NumberOfPages; j++) {
+                Results.append(myOutput[j]);
+                buttons.append("<li class=\"page-item selected\"><button onclick=\"viewPage("+j+")\" class=\"page-link\">" + (j + 1) + "</button></li>");
             }
         }
         else
         {
-            myOutput.append("<h1 style=\"text-align: center; color: lightgrey;\">NOT FOUND!</h1>");
+            Results.append("<h1 style=\"text-align: center; color: lightgrey;\">NOT FOUND!</h1>");
             //myOutput.append("<h1>"+name+"</h1>");
         }
         response.setContentType("text/html");
@@ -49,7 +73,10 @@ public class WebInterface extends HttpServlet {
                 "    <link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"images/Icon.png\" />\n" +
                 "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
                 "\t<script src=\"https://code.jquery.com/jquery-1.10.2.min.js\"></script>\n" +
+                "   <link href=\"https://fonts.googleapis.com/css?family=Poppins\" rel=\"stylesheet\" />" +
                 "    <link href=\"https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css\" rel=\"stylesheet\">\n" +
+                "    <link rel=\"stylesheet\" href=\"https://use.fontawesome.com/releases/v5.9.0/css/all.css\">\n" +
+                "    <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\">" +
                 "\t<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js\"></script>\n" +
                 "</head>\n" +
                 "<body>\n" +
@@ -63,6 +90,7 @@ public class WebInterface extends HttpServlet {
                 "                        <div class=\"col-md-8 offset-md-2\">\n" +
                 "                            <div class=\"pt-3 pb-4\">\n" +
                 "                                <div class=\"input-group\">\n" +
+                "                                       <h1 class=\"Logo\"><a href=\"http://localhost:8080/\"><i class=\"fa fa-flash\"></i>Flash</a></h1>" +
                 "                                       <input value='" +name+"'\" id=\"search\" class=\"form-control\" name=\"q\" type=\"text\" placeholder=\"What are you looking for?\" />\n" +
                 "                                    <div class=\"input-group-append\">\n" +
                 "                                        <button type=\"submit\" class=\"btn waves-effect waves-light btn-custom\"><i class=\"fa fa-search mr-1\"></i> Search</button>\n" +
@@ -82,26 +110,10 @@ public class WebInterface extends HttpServlet {
                 "                        <div class=\"tab-pane active\" id=\"home\">\n" +
                 "                            <div class=\"row\">\n" +
                 "                                <div class=\"col-md-12\">\n" +
-                "                                    <script>\n" +
-                "                                        let size = " + n + ";\n" +
-                "                                        let NumberOfPages = size / 10;\n" +
-                "                                        let currentPage = document.querySelector('#selected');\n" +
-                "                                        let loopCount = 10;\n" +
-                "                                        if (currentPage == NumberOfPages) {\n" +
-                "                                            loopCount = size % 10;\n" +
-                "                                            if (loopCount == 0)\n" +
-                "                                               loopCount = 10;\n" +
-                "                                        }\n" +
-                "                                    </script> \n" + myOutput +
+                                                        Results +
                 "                                    <ul class=\"pagination justify-content-end pagination-split mt-0\">\n" +
-                "                                        <li class=\"page-item\"><a class=\"page-link\" href=\"#\" aria-label=\"Previous\"><span aria-hidden=\"true\">«</span> <span class=\"sr-only\">Previous</span></a></li>\n" +
-                "                                        <li class=\"page-item selected\"><a class=\"page-link\" href=\"#\">1</a></li>\n" +
-                "                                        <script>\n" +
-                "                                            for(let i = 2; i <= NumberOfPages; i++) {\n" +
-                "                                                <li class=\"page-item selected\"><a class=\"page-link\" href=\"#\">i</a></li>\n" +
-                "                                            }\n" +
-                "                                        </script>\n" +
-                "                                        <li class=\"page-item\"><a class=\"page-link\" href=\"#\" aria-label=\"Next\"><span aria-hidden=\"true\">»</span> <span class=\"sr-only\">Next</span></a></li>\n" +
+                                                        buttons +
+                "                                        <!--<li class=\"page-item\"><a class=\"page-link\" href=\"#\" aria-label=\"Next\"><span aria-hidden=\"true\">»</span> <span class=\"sr-only\">Next</span></a></li>-->\n" +
                 "                                    </ul>" +
                 "                                    <div class=\"clearfix\"></div>\n" +
                 "                                </div>\n" +
@@ -161,12 +173,30 @@ public class WebInterface extends HttpServlet {
                 "}\n" +
                 ".badge-success {\n" +
                 "    color: #fff;\n" +
-                "    background-color: #211439;\n" +
+                "    background-color: rgb(50, 41, 111);\n" +
                 "}\n" +
                 ".search-result-box .search-item {\n" +
                 "    padding-bottom: 20px;\n" +
                 "    border-bottom: 1px solid #e3eaef;\n" +
                 "    margin-bottom: 20px\n" +
+                "}\n" +
+                "h1{\n" +
+                "    text-align:center;\n" +
+                "    background:linear-gradient(to right,#84c2f7,#6ebcff,#50adff,#2197ff,#0058af);\n" +
+                "    background-size:400%;\n" +
+                "    font-family: poppins;\n" +
+                "    font-weight: bold;\n" +
+                "    -webkit-text-fill-color:transparent;\n" +
+                "    -webkit-background-clip: text;\n" +
+                "    animation: animate 20s ease infinite;\n" +
+                "    animation-direction: reverse;\n" +
+                "    font-size: 27px;\n" +
+                "    margin-right: 10px;\n" +
+                "    margin-top: 5px;\n" +
+                "  }\n" +
+                "\n" +
+                ".input-group-append {\n" +
+                "    height: 38px;\n" +
                 "}\n" +
                 ".text-success {\n" +
                 "    color: #00ddb1!important;\n" +
@@ -195,7 +225,19 @@ public class WebInterface extends HttpServlet {
                 "</style>\n" +
                 "\n" +
                 "<script type=\"text/javascript\">\n" +
-                "\n" +
+                "function viewPage(page) {\n" +
+                "   window.location.href='#';\n" +
+                "   for (let i = 0; i < " + NumberOfPages + "; i++) {\n" +
+                "       let name = \"shown\" + i.toString();\n" +
+                "       let current = document.getElementById(name);\n" +
+                "       if (i != page)\n" +
+                "           current.style.display = \"none\";\n" +
+                "       else {\n" +
+                "           current.removeAttribute(\"hidden\");\n" +
+                "           current.style.display = \"block\";\n" +
+                "       }\n" +
+                "   }\n" +
+                "}\n" +
                 "</script>\n" +
                 "</body>\n" +
                 "</html>";
