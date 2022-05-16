@@ -54,7 +54,11 @@ public class WebInterface extends HttpServlet {
             }
             for (int j = 0; j < NumberOfPages; j++) {
                 Results.append(myOutput[j]);
-                buttons.append("<li class=\"page-item selected\"><button onclick=\"viewPage("+j+")\" class=\"page-link\">" + (j + 1) + "</button></li>");
+                if (j == 0)
+                    buttons.append("<li class=\"page-item\"><button id=\"selected" + j + "\" style=\"background-color: lightblue; font-weight: bold;\" onclick=\"viewPage("+j+")\" class=\"page-link\">" + (j + 1) + "</button></li>");
+                else
+                    buttons.append("<li class=\"page-item\"><button id=\"selected" + j + "\" onclick=\"viewPage("+j+")\" class=\"page-link\">" + (j + 1) + "</button></li>");
+
             }
         }
         else
@@ -230,12 +234,19 @@ public class WebInterface extends HttpServlet {
                 "   window.location.href='#';\n" +
                 "   for (let i = 0; i < " + NumberOfPages + "; i++) {\n" +
                 "       let name = \"shown\" + i.toString();\n" +
+                "       let buttonClicked = \"selected\" + i.toString();\n" +
                 "       let current = document.getElementById(name);\n" +
-                "       if (i != page)\n" +
+                "       let buttonSelected = document.getElementById(buttonClicked);\n" +
+                "       if (i != page) {\n" +
                 "           current.style.display = \"none\";\n" +
+                "           buttonSelected.style.backgroundColor = 'white';\n" +
+                "           buttonSelected.style.fontWeight = 'normal';\n" +
+                "       }\n" +
                 "       else {\n" +
                 "           current.removeAttribute(\"hidden\");\n" +
                 "           current.style.display = \"block\";\n" +
+                "           buttonSelected.style.backgroundColor = 'lightblue';\n" +
+                "           buttonSelected.style.fontWeight = 'bold';\n" +
                 "       }\n" +
                 "   }\n" +
                 "}\n" +
