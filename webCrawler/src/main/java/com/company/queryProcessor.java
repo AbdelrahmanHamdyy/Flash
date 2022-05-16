@@ -119,8 +119,10 @@ public class queryProcessor {
         int numberOfDocs=(int)db.getAttr("Globals", "key","counter","value" );
         for(String s:words)
         {
-            int DF=(int)db.getAttr("words","word",s,"DF");
-            IDF.put(s,numberOfDocs/DF);
+            if (db.isExists("words", "word","s")) {
+                int DF = (int) db.getAttr("words", "word", s, "DF");
+                IDF.put(s, numberOfDocs / DF);
+            }
         }
         Arrays.sort(words, new Comparator<String>() {
             @Override
