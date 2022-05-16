@@ -78,6 +78,7 @@ public class WebInterface extends HttpServlet {
                 "    <link rel=\"stylesheet\" href=\"https://use.fontawesome.com/releases/v5.9.0/css/all.css\">\n" +
                 "    <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\">" +
                 "\t<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js\"></script>\n" +
+                "    <script src=\"https://unpkg.com/sweetalert/dist/sweetalert.min.js\"></script>\n"+
                 "</head>\n" +
                 "<body>\n" +
                 "<div class=\"content\">\n" +
@@ -93,7 +94,7 @@ public class WebInterface extends HttpServlet {
                 "                                       <h1 class=\"Logo\"><a href=\"http://localhost:8080/\"><i class=\"fa fa-flash\"></i>Flash</a></h1>" +
                 "                                       <input value='" +name+"'\" id=\"search\" class=\"form-control\" name=\"q\" type=\"text\" placeholder=\"What are you looking for?\" />\n" +
                 "                                    <div class=\"input-group-append\">\n" +
-                "                                        <button type=\"submit\" class=\"btn waves-effect waves-light btn-custom\"><i class=\"fa fa-search mr-1\"></i> Search</button>\n" +
+                "                                        <button onclick=\"return empty()\" type=\"submit\" class=\"btn waves-effect waves-light btn-custom\"><i class=\"fa fa-search mr-1\"></i> Search</button>\n" +
                 "                                    </div>\n" +
                 "                                </div>\n" +
                 "                                <div class=\"mt-4 text-center\">\n" +
@@ -237,6 +238,15 @@ public class WebInterface extends HttpServlet {
                 "           current.style.display = \"block\";\n" +
                 "       }\n" +
                 "   }\n" +
+                "}\n" +
+                "function empty() {\n" +
+                "      var x;\n" +
+                "      x = document.getElementById(\"search\").value;\n" +
+                "      if (x == \"\") {\n" +
+                "        swal ( \"Search\" ,  \"Input Field is Empty!\" ,  \"error\" )\n" +
+                "          return false;\n" +
+                "      };\n" +
+                "      return true;\n" +
                 "}\n" +
                 "</script>\n" +
                 "</body>\n" +
