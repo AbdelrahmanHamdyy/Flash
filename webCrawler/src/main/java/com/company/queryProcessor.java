@@ -127,7 +127,9 @@ public class queryProcessor {
         Arrays.sort(words, new Comparator<String>() {
             @Override
             public int compare(String o1, String o2) {
-                return IDF.get(o1)-IDF.get(o2);
+                if (IDF.containsKey(o1) && IDF.containsKey(o2))
+                    return IDF.get(o1)-IDF.get(o2);
+                return 0;
             }
         });
     }
