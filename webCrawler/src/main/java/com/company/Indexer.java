@@ -17,6 +17,8 @@ public class Indexer {
     public static DB db = new DB();
     public static Map<String, Integer> tag = new HashMap<>();
     public static List<String> stopWords = new ArrayList<>();
+    public static HashMap<String, HashMap<String,IndexerObject>> WordInsert = new HashMap<>();
+    public static HashMap<String, HashSet<String>> stem = new HashMap<>();
     public static HashMap<String, List<Integer>> wordMap = new HashMap<>();
     public static HashMap<String, List<Integer>> indices = new HashMap<>();
     public static Stemmer stemmer = new Stemmer();
@@ -72,18 +74,19 @@ public class Indexer {
             paragraphs.clear();
             if (doc != null) {
                 for (Map.Entry<String, Integer> entry : tag.entrySet()) {
-                    indexing(entry.getKey(), doc, entry.getValue());
+                    indexing(entry.getKey(), doc, entry.getValue(),url);
                 }
                 db.updateDB("URLs","url",url,"paragraphs",paragraphs);
-                insertToIndexer(wordMap, url);
                 wordParagraphsMapping.clear();
                 wordMap.clear();
                 indices.clear();
             }
         }
+        insertToIndexer();
+        insertToStem();
         db.updateDB("Globals","key","paragraphsCounter","value",numberOfParagraphs);
     }
-    public static void indexing(String tag, Document doc, int weight) {
+    public static void indexing(String tag, Document doc, int weight,String url) {
         Elements elements = doc.select(tag);
         for (Element i : elements) {
             ArrayList<String> keys1 = new ArrayList<String>();
@@ -100,19 +103,8 @@ public class Indexer {
                 if (!s.equals("")) {
                     String lowerCaseString = s.toLowerCase();
                     String Temp = stemmer.Stemming(lowerCaseString);
-                    if (!db.isExists("stemming", "key", Temp)) {
-                        ArrayList<String> keys = new ArrayList<String>();
-                        ArrayList<Object> values = new ArrayList<Object>();
-                        keys.add("key");
-                        values.add(Temp);
-                        keys.add("array");
-                        ArrayList<String> fir = new ArrayList<String>();
-                        fir.add(lowerCaseString);
-                        values.add(fir);
-                        db.insertToDB("stemming", keys, values);
-                    } else {
-                        db.pushToList("stemming", "key", Temp, "array", lowerCaseString);
-                    }
+                    stem.putIfAbsent(Temp,new HashSet<String>());
+                    stem.get(Temp).add(lowerCaseString);
                     wordMap.putIfAbsent(lowerCaseString, new ArrayList<Integer>() {{
                         add(0);
                         add(0);
@@ -125,6 +117,14 @@ public class Indexer {
                     }}); // Increase weight & TF of each word
                     wordParagraphsMapping.putIfAbsent(lowerCaseString,numberOfParagraphs-1);
                     indices.get(lowerCaseString).add(pageIndex);
+                    /////////////
+                    WordInsert.putIfAbsent(lowerCaseString, new HashMap<>());
+                    WordInsert.get(lowerCaseString).putIfAbsent(url,new IndexerObject());
+                    HashMap<String,IndexerObject> Obj = WordInsert.get(lowerCaseString);
+                    WordInsert.get(lowerCaseString).get(url).TF+=1;
+                    WordInsert.get(lowerCaseString).get(url).Weight+=weight;
+                    WordInsert.get(lowerCaseString).get(url).positions.add(pageIndex);
+                    ////////
                     pageIndex++;
                 }
             }
@@ -132,37 +132,41 @@ public class Indexer {
 
     }
 
-    public static void insertToIndexer(HashMap<String, List<Integer>> words, String url) {
-        for (Map.Entry<String,List<Integer>> entry : words.entrySet()) {
-            if (db.isExists("words", "word", entry.getKey())) {
-                int DF = (int) db.getAttr("words", "word", entry.getKey(), "DF");
-                db.updateDB("words", "word", entry.getKey(), "DF", DF + 1);
-                BasicDBObject doc = new BasicDBObject("TF", entry.getValue().get(1));
-                doc.append("weight", entry.getValue().get(0));
-                doc.append("url", url);
-                doc.append("positions", indices.get(entry.getKey()));
-                doc.append("paragraphID",wordParagraphsMapping.get(entry.getKey()));
-                ArrayList<BasicDBObject> arr = (ArrayList<BasicDBObject>) db.getAttr("words", "word", entry.getKey(), "urls");
-                System.out.println(arr);
-                arr.add(doc);
-                System.out.println(arr);
-                db.updateDB("words", "word", entry.getKey(), "urls", arr);
-            }
-            else {
-                ArrayList<String> keys = new ArrayList<>(){{add("word"); add("urls"); add("DF");}};
-                ArrayList<BasicDBObject> urls = new ArrayList<BasicDBObject>();
-                BasicDBObject doc = new BasicDBObject("TF", entry.getValue().get(1));
-                doc.append("weight", entry.getValue().get(0));
-                doc.append("url", url);
-                doc.append("positions", indices.get(entry.getKey()));
-                doc.append("paragraphID",wordParagraphsMapping.get(entry.getKey()));
+    public static void insertToIndexer() {
+        for (Map.Entry<String, HashMap<String,IndexerObject>> entry : WordInsert.entrySet()) {
+            ArrayList<String> keys = new ArrayList<>() {{
+                add("word");
+                add("urls");
+                add("DF");
+            }};
+            ArrayList<BasicDBObject> urls = new ArrayList<BasicDBObject>();
+            for (Map.Entry<String,IndexerObject> entry2 :entry.getValue().entrySet()) {
+                BasicDBObject doc = new BasicDBObject("TF",entry2.getValue().TF);
+                doc.append("weight", entry2.getValue().Weight);
+                doc.append("url", entry2.getKey());
+                doc.append("positions",  entry2.getValue().positions);
+                //doc.append("paragraphID", wordParagraphsMapping.get(entry.getKey()));
                 urls.add(doc);
-                ArrayList<Object> values = new ArrayList<>(){{add(entry.getKey()); add(urls); add(1);}};
-                db.insertToDB("words", keys, values);
             }
+            ArrayList<Object> values = new ArrayList<>() {{
+                add(entry.getKey());
+                add(urls);
+                add(urls.size());
+            }};
+            db.insertToDB("words", keys, values);
         }
     }
-
+    public static void insertToStem(){
+        for (Map.Entry<String,HashSet<String>> entry : stem.entrySet()) {
+            ArrayList<String> keys = new ArrayList<String>();
+            ArrayList<Object> values = new ArrayList<Object>();
+            keys.add("key");
+            values.add(entry.getKey());
+            keys.add("array");
+            values.add(entry.getValue());
+            db.insertToDB("stemming", keys, values);
+        }
+    }
     public static void ReadStopWords() throws FileNotFoundException, IOException {
         try {
             File file = new File("stopwords.txt");

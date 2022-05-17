@@ -103,7 +103,7 @@ public class Crawler {
             if(doc == null)
                 return;
             String C_String = CS.String_Compact(doc);
-            if (db.isExists("URLs", "CompactString", C_String)) {
+            if (db.isExists("URLs", "CompactString", C_String) || C_String.length()<50) {
                 String dbUrl = (String) db.getAttr("URLs", "CompactString", C_String, "url");
                 int popularity = (int) db.getAttr("URLs", "url", dbUrl, "popularity");
                 db.updateDB("URLs", "url", dbUrl, "popularity", popularity + 1);
@@ -113,7 +113,8 @@ public class Crawler {
             ArrayList<Object>values=new ArrayList<Object>();
             keys.add("url");values.add(url);
             keys.add("id");values.add(numberOfLinks);
-            keys.add("CompactString");values.add(C_String);
+            keys.add("CompactString");
+            values.add(C_String);
             keys.add("popularity");values.add(1);
             ArrayList<Integer>paragraphs=new ArrayList<Integer>();
             keys.add("paragraphs");values.add(paragraphs);
