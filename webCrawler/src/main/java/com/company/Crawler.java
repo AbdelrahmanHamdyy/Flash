@@ -122,6 +122,8 @@ public class Crawler {
         doc = request(url);
         if(doc == null)
             return;
+        if(!CheckRobots(url))
+            return;
         String C_String = CS.String_Compact(doc);
         int urlID=-1;
         synchronized (links) {
