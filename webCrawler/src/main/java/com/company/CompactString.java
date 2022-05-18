@@ -16,14 +16,14 @@ public class CompactString {
         if(count_string != 50) {
             compact+= comp ("div", doc);
         }
-        System.out.println(compact);
+      //  System.out.println(compact);
         return compact;
     }
     private String comp (String tag,Document doc ) {
         String compact = "";
         String temp_text =doc.select(tag).text();
         String[] span_text_split = temp_text.split(" ");
-        System.out.println(temp_text);
+       // System.out.println(temp_text);
 
         for(int i = 0; i < span_text_split.length; i++) {
             span_text_split[i]= span_text_split[i].replaceAll("[^a-zA-Z]","");

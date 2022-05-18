@@ -3,21 +3,28 @@ package com.company;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.net.*;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class Crawler {
     private int numOfThreads;
     private ArrayList<String>myLinks;
+    private HashSet<String>links;
+    private HashSet<String>compactStrings;
     private long NumberOfWords;
     private CompactString CS = new CompactString();
-    private DB db = new DB();
+    private DB db ;
     private int numberOfLinks;
-    ArrayList<Thread> threads;
+    private ArrayList<Thread> threads;
+    private HashMap<String,Integer>popularity;
+    private ArrayList<Pair>URLs;
     private class myThread implements Runnable{
         private int start;
         private int end;
@@ -37,19 +44,24 @@ public class Crawler {
                     crawl(myLinks.get(i));
                 } catch (IOException e) {
                     //e.printStackTrace();
-                    System.out.println("~~");
+                    //System.out.println("~~");
                 }
             }
         }
     }
 
     public Crawler(int num)  {
-        setCounter();
+        //setCounter();
+        numberOfLinks=0;
+        links=new HashSet<String>();
+        URLs=new ArrayList<Pair>();
+        compactStrings=new HashSet<String>();
+        popularity=new HashMap<String,Integer>();
+        db= new DB();
         numberOfLinks=(int)db.getAttr("Globals", "key","counter","value" );
         System.out.println("counter : "+numberOfLinks);
         myLinks=(ArrayList<String>)db.getListOf("CrawlerLinks","url");
-        System.out.println("WebCrawler is created"+myLinks);
-
+        //System.out.println("WebCrawler is created"+myLinks);
         int numOfLinks = myLinks.size();
         numOfThreads = Math.min(num, numOfLinks);
         threads= new ArrayList<Thread>(numOfThreads);
@@ -77,25 +89,36 @@ public class Crawler {
                 System.out.println("Error with joining");
             }
         }
+        for(Pair p:URLs)
+        {
+            //System.out.println("\n******************** adham **********************\n");
+            ArrayList<String>keys=(ArrayList<String>)p.first;
+            ArrayList<Object>values=(ArrayList<Object>)p.second;
+            //System.out.println(values.get(0));
+            //System.out.println(popularity.get(values.get(0)));
+            values.set(3,popularity.get(values.get(0)));
+            db.insertToDB("URLs",keys,values);
+        }
         db.updateDB("Globals","key","counter","value",numberOfLinks);
     }
 
     public void crawl(String url) throws IOException {
         Document doc = null;
-
-        synchronized (db)
+        synchronized (links)
         {
             if(Thread.currentThread().isInterrupted())
                 return;
-            if(numberOfLinks >= 200)
+            if(numberOfLinks >= 500)
             {
-                for(Thread t:threads)
-                    t.interrupt();
+                for(int i=0;i<threads.size();i++)
+                {
+                    threads.get(i).interrupt();
+                }
                 return;
             }
             try {
-                if(!CheckRobots(url))
-                    return;
+                //if(!CheckRobots(url))
+                //  return;
             } catch(Exception e) {
                 System.out.println("(Robots.txt): Exception Thrown!");
             }
@@ -103,19 +126,16 @@ public class Crawler {
             if(doc == null)
                 return;
             String C_String = CS.String_Compact(doc);
-            if (db.isExists("URLs", "CompactString", C_String) || C_String.length()<50) {
-                String dbUrl = (String) db.getAttr("URLs", "CompactString", C_String, "url");
-                int popularity = (int) db.getAttr("URLs", "url", dbUrl, "popularity");
-                db.updateDB("URLs", "url", dbUrl, "popularity", popularity + 1);
+            if (compactStrings.contains(C_String) || C_String.length()<50) {
                 return;
             }
             ArrayList<String>keys=new ArrayList<String>();
             ArrayList<Object>values=new ArrayList<Object>();
             keys.add("url");values.add(url);
             keys.add("id");values.add(numberOfLinks);
-            keys.add("CompactString");
-            values.add(C_String);
-            keys.add("popularity");values.add(1);
+            keys.add("CompactString");values.add(C_String);
+            compactStrings.add(C_String);
+            keys.add("popularity");values.add(0);
             ArrayList<Integer>paragraphs=new ArrayList<Integer>();
             keys.add("paragraphs");values.add(paragraphs);
             String title = doc.select("title").text();
@@ -125,7 +145,11 @@ public class Crawler {
             keys.add("title"); values.add(title);
             //keys.add("description"); values.add(description);
             keys.add("NumberOfWords");values.add(NumberOfWords);
-            db.insertToDB("URLs",keys,values);
+            //
+            Pair temp=new Pair();
+            temp.first=keys;
+            temp.second=values;
+            URLs.add(temp);
             numberOfLinks++;
         }
 
@@ -139,9 +163,14 @@ public class Crawler {
     }
     public Document request(String url)
     {
+        popularity.putIfAbsent(url,1);
         try {
-            if (db.isExists("URLs", "url", url))
+            if (links.contains(url))
+            {
+                popularity.put(url,popularity.get(url)+1);
                 return null;
+            }
+            links.add(url);
             Connection connect= Jsoup.connect(url);
             Document doc=connect.get();
             if(connect.response().statusCode()==200)
@@ -149,6 +178,10 @@ public class Crawler {
                 return doc;
             }
         } catch (IOException e) {
+            return null;
+        }
+        catch (IllegalArgumentException e)
+        {
             return null;
         }
         return null;

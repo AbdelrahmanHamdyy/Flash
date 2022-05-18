@@ -12,19 +12,18 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
-
+import org.apache.commons.lang3.ArrayUtils;
 public class Indexer {
     public static DB db = new DB();
     public static Map<String, Integer> tag = new HashMap<>();
     public static List<String> stopWords = new ArrayList<>();
     public static HashMap<String, HashMap<String,IndexerObject>> WordInsert = new HashMap<>();
     public static HashMap<String, HashSet<String>> stem = new HashMap<>();
-    public static HashMap<String, List<Integer>> wordMap = new HashMap<>();
-    public static HashMap<String, List<Integer>> indices = new HashMap<>();
     public static Stemmer stemmer = new Stemmer();
     public static int numberOfParagraphs;
     public static HashMap<String,Integer>wordParagraphsMapping;
     public static ArrayList<Integer>paragraphs=new ArrayList<Integer>();
+    public static int pageIndex = 0;
     public static Document getDocument(String url) throws IOException {
         try {
             Connection connect= Jsoup.connect(url);
@@ -69,6 +68,7 @@ public class Indexer {
         numberOfParagraphs=(int)db.getAttr("Globals", "key","paragraphsCounter","value" );
         int Count = (int)db.getAttr("Globals", "key","counter","value" );
         for (int i = 0; i < Count; i++) {
+            pageIndex = 0;
             String url = (String)db.getAttr("URLs","id", i,"url");
             Document doc = getDocument(url);
             paragraphs.clear();
@@ -77,9 +77,6 @@ public class Indexer {
                     indexing(entry.getKey(), doc, entry.getValue(),url);
                 }
                 db.updateDB("URLs","url",url,"paragraphs",paragraphs);
-                wordParagraphsMapping.clear();
-                wordMap.clear();
-                indices.clear();
             }
         }
         insertToIndexer();
@@ -95,33 +92,22 @@ public class Indexer {
             keys1.add("id");values1.add(numberOfParagraphs++);
             keys1.add("content");values1.add(i.text());
             db.insertToDB("Paragraphs",keys1,values1);
-            String temp_text = i.text();
+            String temp_text = i.text().toLowerCase(Locale.ROOT);
             String[] text_split = temp_text.split(" "); // split the text
             text_split = removeStopWords(text_split);
-            int pageIndex = 0;
             for (String s : text_split) {
                 if (!s.equals("")) {
                     String lowerCaseString = s.toLowerCase();
                     String Temp = stemmer.Stemming(lowerCaseString);
                     stem.putIfAbsent(Temp,new HashSet<String>());
                     stem.get(Temp).add(lowerCaseString);
-                    wordMap.putIfAbsent(lowerCaseString, new ArrayList<Integer>() {{
-                        add(0);
-                        add(0);
-                    }}); // For initial insertion
-                    int finalPageIndex = pageIndex;
-                    indices.putIfAbsent(lowerCaseString, new ArrayList<Integer>());
-                    wordMap.put(lowerCaseString, new ArrayList<>() {{
-                        add(wordMap.get(lowerCaseString).get(0) + weight);
-                        add(wordMap.get(lowerCaseString).get(1) + 1);
-                    }}); // Increase weight & TF of each word
-                    wordParagraphsMapping.putIfAbsent(lowerCaseString,numberOfParagraphs-1);
-                    indices.get(lowerCaseString).add(pageIndex);
                     /////////////
                     WordInsert.putIfAbsent(lowerCaseString, new HashMap<>());
                     WordInsert.get(lowerCaseString).putIfAbsent(url,new IndexerObject());
                     HashMap<String,IndexerObject> Obj = WordInsert.get(lowerCaseString);
                     WordInsert.get(lowerCaseString).get(url).TF+=1;
+                    if(WordInsert.get(lowerCaseString).get(url).paragraphID==-1)
+                        WordInsert.get(lowerCaseString).get(url).paragraphID=numberOfParagraphs-1;
                     WordInsert.get(lowerCaseString).get(url).Weight+=weight;
                     WordInsert.get(lowerCaseString).get(url).positions.add(pageIndex);
                     ////////
@@ -145,7 +131,7 @@ public class Indexer {
                 doc.append("weight", entry2.getValue().Weight);
                 doc.append("url", entry2.getKey());
                 doc.append("positions",  entry2.getValue().positions);
-                //doc.append("paragraphID", wordParagraphsMapping.get(entry.getKey()));
+                doc.append("paragraphID", entry2.getValue().paragraphID);
                 urls.add(doc);
             }
             ArrayList<Object> values = new ArrayList<>() {{
@@ -172,7 +158,7 @@ public class Indexer {
             File file = new File("stopwords.txt");
             Scanner Reader = new Scanner(file);
             while (Reader.hasNextLine()) {
-                stopWords.add(Reader.nextLine());
+                stopWords.add(Reader.nextLine().toLowerCase(Locale.ROOT));
             }
             Reader.close();
         } catch (FileNotFoundException e) {
@@ -182,13 +168,14 @@ public class Indexer {
     }
 
     public static String[] removeStopWords (String[] M){
-        for(String word : stopWords) {
-            for (int i = 0; i < M.length; i++) {
-                M[i] = M[i].replaceAll("[^a-zA-Z0-9]","");
-                if (M[i].toLowerCase(Locale.ROOT).equals(word))
-                    M = ArrayUtils.remove(M, i);
-            }
+        ArrayList<String> MList = new ArrayList();
+        for(String word : M) {
+            //MList.removeAll(Collections.singleton(word.toLowerCase(Locale.ROOT)));
+            word = word.replaceAll("[^a-zA-Z0-9]","");
+           if(word!="" &&!stopWords.contains(word))
+               MList.add(word);
         }
-        return M;
+
+        return MList.toArray(new String[0]);
     }
 }
