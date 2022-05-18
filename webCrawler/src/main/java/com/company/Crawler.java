@@ -108,7 +108,7 @@ public class Crawler {
         {
             if(Thread.currentThread().isInterrupted())
                 return;
-            if(numberOfLinks >= 500)
+            if(numberOfLinks >= 100)
             {
                 for(int i=0;i<threads.size();i++)
                 {

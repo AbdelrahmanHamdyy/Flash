@@ -15,7 +15,7 @@ public class Main {
         Scanner cin = new Scanner(System.in);
         int numOfTreads = cin.nextInt();
         System.out.println(numOfTreads);
-        Crawler myCrawler = new Crawler( numOfTreads);
+        Crawler myCrawler = new Crawler(numOfTreads);
         //https://www.cyotek.com/cyotek-webcopy
 //        ArrayList<Integer> l=null;
 //        test(l);
