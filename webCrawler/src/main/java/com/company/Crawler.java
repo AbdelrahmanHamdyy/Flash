@@ -24,44 +24,56 @@ public class Crawler {
     private int numberOfLinks;
     private ArrayList<Thread> threads;
     private HashMap<String,Integer>popularity;
-    private ArrayList<Pair>URLs;
+    final int LIMIT=1000;
     private class myThread implements Runnable{
         private int start;
         private int end;
+        private ArrayList<Pair>URLs;
         myThread(int s,int e)
         {
             start=s;
             end=e;
+            URLs=new ArrayList<Pair>();
         }
         @Override
         public void run() {
             for(int i=start;i<end;i++)
             {
-                //System.out.println(Thread.currentThread().getName()+" crawls with : "+myLinks.get(i));
+                myLinks.set(i,"https://www."+myLinks.get(i));
+                System.out.println(Thread.currentThread().getName()+" crawls with : "+myLinks.get(i));
                 if(Thread.currentThread().isInterrupted())
                     break;
                 try {
-                    crawl(myLinks.get(i));
+                    crawl(myLinks.get(i),URLs);
                 } catch (IOException e) {
                     //e.printStackTrace();
-                    //System.out.println("~~");
+                    System.out.println("~~");
                 }
+            }
+            for(Pair p:URLs)
+            {
+                System.out.println("\n******************** adham **********************\n");
+                ArrayList<String>keys=(ArrayList<String>)p.first;
+                ArrayList<Object>values=(ArrayList<Object>)p.second;
+                System.out.println(values.get(0));
+                System.out.println(popularity.get(values.get(0)));
+                values.set(3,popularity.get(values.get(0)));
+                db.insertToDB("URLs",keys,values);
             }
         }
     }
 
     public Crawler(int num)  {
-        //setCounter();
-        numberOfLinks=0;
+        db= new DB();
+        setCounter();
+
         links=new HashSet<String>();
-        URLs=new ArrayList<Pair>();
         compactStrings=new HashSet<String>();
         popularity=new HashMap<String,Integer>();
-        db= new DB();
         numberOfLinks=(int)db.getAttr("Globals", "key","counter","value" );
         System.out.println("counter : "+numberOfLinks);
         myLinks=(ArrayList<String>)db.getListOf("CrawlerLinks","url");
-        //System.out.println("WebCrawler is created"+myLinks);
+        System.out.println("WebCrawler is created"+myLinks);
         int numOfLinks = myLinks.size();
         numOfThreads = Math.min(num, numOfLinks);
         threads= new ArrayList<Thread>(numOfThreads);
@@ -75,11 +87,12 @@ public class Crawler {
                 e++;
                 rem--;
             }
-            //System.out.println(i+" Starts with : "+s+" Ends with : "+e);
+            System.out.println(i+" Starts with : "+s+" Ends with : "+e);
             Thread temp = new Thread(new myThread(s, e));
             s = e;
             temp.setName(Integer.toString(i));
             threads.add(temp);
+            Integer id=(int)(long)temp.getId();
             temp.start();
         }
         for (Thread i : threads) {
@@ -89,88 +102,66 @@ public class Crawler {
                 System.out.println("Error with joining");
             }
         }
-        for(Pair p:URLs)
-        {
-            //System.out.println("\n******************** adham **********************\n");
-            ArrayList<String>keys=(ArrayList<String>)p.first;
-            ArrayList<Object>values=(ArrayList<Object>)p.second;
-            //System.out.println(values.get(0));
-            //System.out.println(popularity.get(values.get(0)));
-            values.set(3,popularity.get(values.get(0)));
-            db.insertToDB("URLs",keys,values);
-        }
         db.updateDB("Globals","key","counter","value",numberOfLinks);
     }
 
-    public void crawl(String url) throws IOException {
+    public void crawl(String url,ArrayList<Pair>URLs) throws IOException {
         Document doc = null;
-        synchronized (links)
-        {
-            if(Thread.currentThread().isInterrupted())
+        synchronized (links) {
+            if (numberOfLinks >= LIMIT) {
                 return;
-            if(numberOfLinks >= 100)
+            }
+            if (links.contains(url))
             {
-                for(int i=0;i<threads.size();i++)
-                {
-                    threads.get(i).interrupt();
-                }
                 return;
             }
-            try {
-                //if(!CheckRobots(url))
-                //  return;
-            } catch(Exception e) {
-                System.out.println("(Robots.txt): Exception Thrown!");
-            }
-            doc = request(url);
-            if(doc == null)
-                return;
-            String C_String = CS.String_Compact(doc);
-            if (compactStrings.contains(C_String) || C_String.length()<50) {
-                return;
-            }
-            ArrayList<String>keys=new ArrayList<String>();
-            ArrayList<Object>values=new ArrayList<Object>();
-            keys.add("url");values.add(url);
-            keys.add("id");values.add(numberOfLinks);
-            keys.add("CompactString");values.add(C_String);
-            compactStrings.add(C_String);
-            keys.add("popularity");values.add(0);
-            ArrayList<Integer>paragraphs=new ArrayList<Integer>();
-            keys.add("paragraphs");values.add(paragraphs);
-            String title = doc.select("title").text();
-            //String description = doc.select("meta[name=description]").attr("content");
-            String link= doc.body().text();
-            NumberOfWords=link.length();
-            keys.add("title"); values.add(title);
-            //keys.add("description"); values.add(description);
-            keys.add("NumberOfWords");values.add(NumberOfWords);
-            //
-            Pair temp=new Pair();
-            temp.first=keys;
-            temp.second=values;
-            URLs.add(temp);
-            numberOfLinks++;
+            links.add(url);
+            popularity.putIfAbsent(url,0);
+            popularity.put(url,popularity.get(url)+1);
         }
-
+        doc = request(url);
+        if(doc == null)
+            return;
+        String C_String = CS.String_Compact(doc);
+        int urlID=-1;
+        synchronized (links) {
+            if (numberOfLinks >= LIMIT) {
+                return;
+            }
+            if (compactStrings.contains(C_String) || C_String.length() < 50) {
+                return;
+            }
+            compactStrings.add(C_String);
+            urlID=numberOfLinks++;
+        }
+        ArrayList<String>keys=new ArrayList<String>();
+        ArrayList<Object>values=new ArrayList<Object>();
+        keys.add("url");values.add(url);
+        keys.add("id");values.add(urlID);
+        keys.add("CompactString");values.add(C_String);
+        keys.add("popularity");values.add(0);
+        ArrayList<Integer>paragraphs=new ArrayList<Integer>();
+        keys.add("paragraphs");values.add(paragraphs);
+        String title = doc.select("title").text();
+        String link= doc.body().text();
+        NumberOfWords=link.length();
+        keys.add("title"); values.add(title);
+        keys.add("NumberOfWords");values.add(NumberOfWords);
+        Pair temp=new Pair();
+        temp.first=keys;
+        temp.second=values;
+        URLs.add(temp);
         Elements childrenLinks=doc.select("a[href]");
         for(Element child:childrenLinks)
         {
             String childLink=child.absUrl("href");
-            crawl(childLink);
+            crawl(childLink,URLs);
         }
 
     }
     public Document request(String url)
     {
-        popularity.putIfAbsent(url,1);
         try {
-            if (links.contains(url))
-            {
-                popularity.put(url,popularity.get(url)+1);
-                return null;
-            }
-            links.add(url);
             Connection connect= Jsoup.connect(url);
             Document doc=connect.get();
             if(connect.response().statusCode()==200)
