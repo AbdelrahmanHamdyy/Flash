@@ -24,7 +24,7 @@ public class Crawler {
     private int numberOfLinks;
     private ArrayList<Thread> threads;
     private HashMap<String,Integer>popularity;
-    final int LIMIT=1000;
+    final int LIMIT=5000;
     private class myThread implements Runnable{
         private int start;
         private int end;
@@ -40,23 +40,23 @@ public class Crawler {
             for(int i=start;i<end;i++)
             {
                 myLinks.set(i,"https://www."+myLinks.get(i));
-                System.out.println(Thread.currentThread().getName()+" crawls with : "+myLinks.get(i));
+                //System.out.println(Thread.currentThread().getName()+" crawls with : "+myLinks.get(i));
                 if(Thread.currentThread().isInterrupted())
                     break;
                 try {
                     crawl(myLinks.get(i),URLs);
                 } catch (IOException e) {
                     //e.printStackTrace();
-                    System.out.println("~~");
+                    //System.out.println("~~");
                 }
             }
             for(Pair p:URLs)
             {
-                System.out.println("\n******************** adham **********************\n");
+               //System.out.println("\n******************** adham **********************\n");
                 ArrayList<String>keys=(ArrayList<String>)p.first;
                 ArrayList<Object>values=(ArrayList<Object>)p.second;
-                System.out.println(values.get(0));
-                System.out.println(popularity.get(values.get(0)));
+                //System.out.println(values.get(0));
+                //System.out.println(popularity.get(values.get(0)));
                 values.set(3,popularity.get(values.get(0)));
                 db.insertToDB("URLs",keys,values);
             }
@@ -71,23 +71,23 @@ public class Crawler {
         compactStrings=new HashSet<String>();
         popularity=new HashMap<String,Integer>();
         numberOfLinks=(int)db.getAttr("Globals", "key","counter","value" );
-        System.out.println("counter : "+numberOfLinks);
+        //System.out.println("counter : "+numberOfLinks);
         myLinks=(ArrayList<String>)db.getListOf("CrawlerLinks","url");
-        System.out.println("WebCrawler is created"+myLinks);
+        //System.out.println("WebCrawler is created"+myLinks);
         int numOfLinks = myLinks.size();
         numOfThreads = Math.min(num, numOfLinks);
         threads= new ArrayList<Thread>(numOfThreads);
         int s = 0;
         int quantity = numOfLinks / numOfThreads;
         int rem = numOfLinks % numOfThreads;
-        System.out.println("numOfLinks : " + numOfLinks + " numOfThreads : " + numOfThreads + " quantity : " + quantity + " rem : " + rem);
+        //System.out.println("numOfLinks : " + numOfLinks + " numOfThreads : " + numOfThreads + " quantity : " + quantity + " rem : " + rem);
         for (int i = 0; i < numOfThreads; i++) {
             int e = s + quantity;
             if (rem != 0) {
                 e++;
                 rem--;
             }
-            System.out.println(i+" Starts with : "+s+" Ends with : "+e);
+            //System.out.println(i+" Starts with : "+s+" Ends with : "+e);
             Thread temp = new Thread(new myThread(s, e));
             s = e;
             temp.setName(Integer.toString(i));
@@ -99,7 +99,7 @@ public class Crawler {
             try {
                 i.join();
             } catch (InterruptedException exe) {
-                System.out.println("Error with joining");
+                //System.out.println("Error with joining");
             }
         }
         db.updateDB("Globals","key","counter","value",numberOfLinks);
@@ -122,8 +122,12 @@ public class Crawler {
         doc = request(url);
         if(doc == null)
             return;
-        if(!CheckRobots(url))
-            return;
+        try {
+            if(!CheckRobots(url))
+                return;
+        } catch(Exception e) {
+            System.out.println("(Robots.txt): Exception thrown!");
+        }
         String C_String = CS.String_Compact(doc);
         int urlID=-1;
         synchronized (links) {
@@ -204,19 +208,19 @@ public class Crawler {
         else
             return true;
         Connection connect = Jsoup.connect(Robots_Link);
-        System.out.println(Robots_Link);
+        //System.out.println(Robots_Link);
         //here we take the whole content of url/robots.txt
         Document SpecialDoc = connect.get();
         String FullContent=SpecialDoc.outerHtml();
         //now we start searching for what we cannot search in
         int StartIndex=FullContent.indexOf("User-agent: *");
-        System.out.println(StartIndex);
+        //System.out.println(StartIndex);
         if(StartIndex!=-1)
         {
             //now we find our User-agent:*
             //we will start to crop the whole content until we find User-agent:*
             //here is the content from User-agent:* till the end
-            System.out.println("UserAgentFound");
+            //System.out.println("UserAgentFound");
             String subOne = FullContent.substring(StartIndex);
             //we will crop User-agent:* it has done it's mission
             int SubStart=subOne.indexOf("Disallow");
@@ -228,7 +232,7 @@ public class Crawler {
                 SubStart=SecondSubStart;
             if(SecondSubStart==-1 && SubStart==-1)
             {
-                System.out.println("No Disallow");
+                //System.out.println("No Disallow");
                 return true;
             }
             //now we make sure that we have just found disallow statement
@@ -267,11 +271,11 @@ public class Crawler {
             }
         }
         else{
-            System.out.println("No UserAgent");
+            //System.out.println("No UserAgent");
         }
         for(int i=0;i< ForbiddenLinks.size();i++)
         {
-            System.out.println(ForbiddenLinks.get(i));
+            //System.out.println(ForbiddenLinks.get(i));
             String Path = Specific_Url.getPath();
             String UnwantedStringTemp = ForbiddenLinks.get(i);
             int index=UnwantedStringTemp.indexOf('*');
@@ -290,7 +294,7 @@ public class Crawler {
             if (Path.contains(UnwantedStringTemp))
                 return false;
         }
-        System.out.println(ForbiddenLinks.size());
+        //System.out.println(ForbiddenLinks.size());
         return true;
     }
 }

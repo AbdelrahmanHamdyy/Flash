@@ -7,8 +7,8 @@ import java.util.*;
 public class queryProcessor {
     String[]words;
     private DB db;
-    public ArrayList<Pair>list;
-    public ArrayList<Pair>stemmed;
+    public ArrayList<ArrayList<Document>>list;
+    public ArrayList<ArrayList<Document>>stemmed;
     private Stemmer stemmer ;
     private Ranker ranker;
     boolean isPhrase;
@@ -28,13 +28,13 @@ public class queryProcessor {
         {
             IDF=new HashMap<String,Integer>();
             isPhrase=false;
-            stemmed=new ArrayList<Pair>();
+            stemmed=new ArrayList<ArrayList<Document>>();
             stemmer= new Stemmer();
             ranker=new Ranker();
             db= new DB();
 
         }
-        list=new ArrayList<Pair>();
+        list=new ArrayList<ArrayList<Document>>();
         words=query.split(" ");
 
     }
@@ -61,21 +61,14 @@ public class queryProcessor {
                 if(i.equals(lowerCaseString))
                 {
                     ArrayList<Document>docs=(ArrayList<Document>)db.getAttr("words","word",lowerCaseString,"urls");
-                    int DF=(int)db.getAttr("words","word",lowerCaseString,"DF");
-                    Pair p=new Pair();
-                    p.first=docs;
-                    p.second=DF;
-                    list.add(p);
+                    list.add(docs);
                 }
                 else {
-                    stemmedDocs.addAll((ArrayList<Document>)db.getAttr("words","word",i,"urls"));
-                    stemmedDF+=((int)db.getAttr("words","word",i,"DF"));
+                    ArrayList<Document>docs=(ArrayList<Document>)db.getAttr("words","word",i,"urls");
+                    stemmedDocs.addAll(docs);
                 }
             }
-            Pair p=new Pair();
-            p.first=stemmedDocs;
-            p.second=stemmedDF;
-            stemmed.add(p);
+            stemmed.add(stemmedDocs);
         }
         return success!=0;
     }
@@ -101,36 +94,14 @@ public class queryProcessor {
         }
         else
         {
-            sort();
             if(Process())
             {
                 Rank();
                 p.first=ranker.getOutput();
                 p.second=ranker.getResults();
-                //ranker.print();
-                //System.out.println(p.first);
                 return p;
             }
         }
         return null;
-    }
-    private void sort()
-    {
-        int numberOfDocs=(int)db.getAttr("Globals", "key","counter","value" );
-        for(String s:words)
-        {
-            if (db.isExists("words", "word","s")) {
-                int DF = (int) db.getAttr("words", "word", s, "DF");
-                IDF.put(s, numberOfDocs / DF);
-            }
-        }
-        Arrays.sort(words, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                if (IDF.containsKey(o1) && IDF.containsKey(o2))
-                    return IDF.get(o1)-IDF.get(o2);
-                return 0;
-            }
-        });
     }
 }

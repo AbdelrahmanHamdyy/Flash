@@ -34,18 +34,12 @@ public class Ranker {
         }
     }
 
-    public void rank(List<Pair> list, int stem) {
-        for (Pair P : list) {
-            for (Document object : (List<Document>) P.first) {
+    public void rank(ArrayList<ArrayList<Document>> list, int stem) {
+        for (ArrayList<Document> P : list) {
+            for (Document object : P) {
                 System.out.println(object);
                 String url = (String) object.get("url");
-                long TotalWords = (long) db.getAttr("URLs", "url", url, "NumberOfWords");
-                int TotalDocuments = (int) db.getAttr("Globals", "key", "counter", "value");
-                int DF = (Integer) P.second;
-                double IDF = Math.log((double) TotalDocuments / DF);
-                int TF = (int) object.get("TF");
-                double NormalizedTF = (double) TF / TotalWords;
-                double TF_IDF = NormalizedTF * IDF;
+                double TF_IDF = (double)object.get("TF-IDF");
                 int pid = -1;
                 if(object.containsKey("paragraphID"))
                      pid = (int) object.get("paragraphID");

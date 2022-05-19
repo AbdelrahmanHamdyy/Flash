@@ -14,12 +14,13 @@ import java.io.IOException;
 import java.util.*;
 import org.apache.commons.lang3.ArrayUtils;
 public class Indexer {
-    public static DB db = new DB(); // Database
+    public static final DB db = new DB(); // Database
     public static Map<String, Integer> tags = new HashMap<>(); // HTML Tags
     public static List<String> stopWords = new ArrayList<>(); // Stop Words List
+    public static int urlsCount; // Number Of URLs
 
     public static HashMap<String, HashMap<String,IndexerObject>> IndexerWords = new HashMap<>();
-    // (Contains each word and its corresponding array of indexer object)
+    // (Contains each word and its corresponding url + array of indexer object)
 
     public static HashMap<String, HashSet<String>> stemmedWords = new HashMap<>();
     // (Contains each word and its stemmed derivations)
@@ -28,11 +29,81 @@ public class Indexer {
 
     // **** Paragraphs ****
     public static int numberOfParagraphs;
-    public static HashMap<String, Integer> wordParagraphsMapping;
-    public static ArrayList<Integer> paragraphs=new ArrayList<Integer>();
+    public static ArrayList<Integer> paragraphs = new ArrayList<Integer>();
+    public static HashMap<String,Integer>NumberOfWords;
+    // Multi-threading
+    private ArrayList<Thread> threads;
+    private int numOfThreads;
 
-    // Positions
-    public static int pageIndex = 0;
+    private class IndexThread implements Runnable {
+        private int start;
+        private int end;
+        IndexThread(int i, int j) {
+            start = i;
+            end = j;
+        }
+
+        @Override
+        public void run() {
+            for (int i = start; i < end; i++) {
+                String url = (String) db.getAttr("URLs","id", i,"url");
+                Integer numOfWords=(int)(long) db.getAttr("URLs","id", i,"NumberOfWords");
+                NumberOfWords.put(url,numOfWords);
+                Document doc = null;
+                try {
+                    doc = getDocument(url);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                int pageIndex = 0;
+                paragraphs.clear();
+                if (doc != null) {
+                    RunIndexer(doc, url, pageIndex);
+                    db.updateDB("URLs", "url", url, "paragraphs", paragraphs);
+                }
+            }
+        }
+    }
+
+    Indexer(int num) throws IOException {
+        NumberOfWords=new HashMap<String,Integer>();
+        urlsCount = (int) db.getAttr("Globals", "key","counter","value" );
+        System.out.println("Indexer Created..");
+        numOfThreads = Math.min(num, urlsCount);
+        threads = new ArrayList<Thread>(numOfThreads);
+        int s = 0;
+        int quantity = urlsCount / numOfThreads;
+        int rem = urlsCount % numOfThreads;
+        System.out.println("numOfURLs : " + urlsCount + " numOfThreads : " + numOfThreads + " quantity : " + quantity + " rem : " + rem);
+        setTags();
+        ReadStopWords();
+        setCounter();
+        numberOfParagraphs = (int) db.getAttr("Globals","key","paragraphsCounter","value" );
+        for (int i = 0; i < numOfThreads; i++) {
+            int e = s + quantity;
+            if (rem != 0) {
+                e++;
+                rem--;
+            }
+            System.out.println(i + " Starts with : " + s + " Ends with : " + e);
+            Thread currentThread = new Thread(new Indexer.IndexThread(s, e));
+            s = e;
+            currentThread.setName(Integer.toString(i));
+            threads.add(currentThread);
+            Integer id = (int) (long) currentThread.getId();
+            currentThread.start();
+        }
+        for (Thread i : threads) {
+            try {
+                i.join();
+            } catch (InterruptedException exe) {
+                System.out.println("Error in joining thread " + i.getName());
+            }
+        }
+        insertToIndexer();
+        insertToStem();
+        db.updateDB("Globals","key","paragraphsCounter","value",numberOfParagraphs);
+    }
 
     public static Document getDocument(String url) throws IOException {
         try {
@@ -57,6 +128,7 @@ public class Indexer {
         tags.put("h6",5);
         tags.put("p",4);
     }
+
     public static void setCounter() {
         if(db.isExists("Globals","key","paragraphsCounter"))
             return;
@@ -69,46 +141,33 @@ public class Indexer {
         db.insertToDB("Globals", keys, values);
     }
 
-    public static void main(String[] args) throws IOException {
-        setTags();
-        ReadStopWords();
-        setCounter();
-        wordParagraphsMapping = new HashMap<String,Integer>();
-        numberOfParagraphs = (int) db.getAttr("Globals","key","paragraphsCounter","value" );
-
-        int Count = (int) db.getAttr("Globals", "key","counter","value" );
-        for (int i = 0; i < Count; i++) {
-            pageIndex = 0;
-            String url = (String) db.getAttr("URLs","id", i,"url");
-            Document doc = getDocument(url);
-            paragraphs.clear();
-            if (doc != null) {
-                RunIndexer(doc ,url);
-                db.updateDB("URLs","url",url,"paragraphs",paragraphs);
+    public static void RunIndexer(Document doc, String url, int index) {
+        for (Map.Entry<String, Integer> entry : tags.entrySet()) {
+            synchronized(db) {
+                indexing(entry.getKey(), doc, entry.getValue(), url, index);
             }
         }
-
-        insertToIndexer();
-        insertToStem();
-        db.updateDB("Globals","key","paragraphsCounter","value",numberOfParagraphs);
     }
 
-    public static void RunIndexer(Document doc, String url) {
-        for (Map.Entry<String, Integer> entry : tags.entrySet())
-            indexing(entry.getKey(), doc, entry.getValue(), url);
-    }
-
-    public static void indexing(String tag, Document doc, int weight,String url) {
+    public static void indexing(String tag, Document doc, int weight,String url, int pageIndex) {
         Elements elements = doc.select(tag);
         for (Element i : elements) {
             // Insert Paragraphs
             ArrayList<String> keys = new ArrayList<String>();
             ArrayList<Object> values = new ArrayList<Object>();
+            int sz=i.text().length();
             paragraphs.add(numberOfParagraphs);
             keys.add("id");
             values.add(numberOfParagraphs++);
             keys.add("content");
-            values.add(i.text());
+            if(sz<=400)
+            {
+                values.add(i.text());
+            }
+            else
+            {
+                values.add(i.text().substring(0,300));
+            }
             db.insertToDB("Paragraphs", keys, values);
 
             String temp_text = i.text().toLowerCase(Locale.ROOT);
@@ -135,7 +194,6 @@ public class Indexer {
                 }
             }
         }
-
     }
 
     public static void insertToIndexer() {
@@ -143,21 +201,24 @@ public class Indexer {
             ArrayList<String> keys = new ArrayList<>() {{
                 add("word");
                 add("urls");
-                add("DF");
             }};
+            int DF=entry.getValue().size();
             ArrayList<BasicDBObject> urls = new ArrayList<BasicDBObject>();
             for (Map.Entry<String, IndexerObject> entry2 : entry.getValue().entrySet()) {
-                BasicDBObject doc = new BasicDBObject("TF", entry2.getValue().TF);
+                BasicDBObject doc = new BasicDBObject();
+                int TF=entry2.getValue().TF;
                 doc.append("weight", entry2.getValue().Weight);
                 doc.append("url", entry2.getKey());
                 doc.append("positions",  entry2.getValue().positions);
                 doc.append("paragraphID", entry2.getValue().paragraphID);
+                double NTF=((double)TF)/NumberOfWords.get( entry2.getKey());
+                double IDF=Math.log(((double)urlsCount)/DF);
+                doc.append("TF-IDF",NTF*IDF);
                 urls.add(doc);
             }
             ArrayList<Object> values = new ArrayList<>() {{
                 add(entry.getKey());
                 add(urls);
-                add(urls.size());
             }};
             db.insertToDB("words", keys, values);
         }
@@ -187,13 +248,28 @@ public class Indexer {
         }
     }
 
-    public static String[] removeStopWords (String[] M){
+    /*public static String[] removeStopWords (String[] M){
         ArrayList<String> MList = new ArrayList();
         for(String word : M) {
-            word = word.replaceAll("[^a-zA-Z0-9]","");
+            word = word.replaceAll("[^a-zA-Z]","");
             if(!word.equals("") && !stopWords.contains(word))
                 MList.add(word);
         }
         return MList.toArray(new String[0]);
+    }*/
+
+    public static String[] removeStopWords (String[] M){
+        for(String word : stopWords) {
+            for (int i = 0; i < M.length; i++) {
+                M[i] = M[i].replaceAll("[^a-zA-Z0-9]","");
+                if (M[i].toLowerCase(Locale.ROOT).equals(word))
+                    M = ArrayUtils.remove(M, i);
+            }
+        }
+        return M;
+    }
+
+    public static void calcTF_IDF() {
+
     }
 }
