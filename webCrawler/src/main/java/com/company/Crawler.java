@@ -141,7 +141,7 @@ public class Crawler {
             if (numberOfLinks >= LIMIT) {
                 return;
             }
-            if (compactStrings.contains(C_String)) {
+            if (compactStrings.contains(C_String) || C_String.length() < 50) {
                 return;
             }
             compactStrings.add(C_String);
