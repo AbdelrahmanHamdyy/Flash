@@ -2,6 +2,8 @@ package com.company;
 
 import org.bson.Document;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 
 public class Ranker {
@@ -44,7 +46,13 @@ public class Ranker {
                 if(object.containsKey("paragraphID"))
                      pid = (int) object.get("paragraphID");
                 int weight = (int) object.get("weight");
-                int popularity = (int) db.getAttr("URLs", "url", url, "popularity");
+                URL thisURL = null;
+                try {
+                    thisURL = new URL(url);
+                } catch (MalformedURLException e) {
+                    throw new RuntimeException(e);
+                }
+                int popularity = (int) db.getAttr("HostPopularity", "host", thisURL.getHost(), "popularity");
                 double relevance = TF_IDF * weight;
                 double Priority = relevance * popularity;
                 if (sortedMap.containsKey(url)) {

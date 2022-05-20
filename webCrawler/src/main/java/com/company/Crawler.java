@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.net.*;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 public class Crawler {
     private int numOfThreads;
@@ -37,28 +38,25 @@ public class Crawler {
         }
         @Override
         public void run() {
-            for(int i=start;i<end;i++)
-            {
-                myLinks.set(i,"https://www."+myLinks.get(i));
+            for (int i = start; i < end; i++) {
+                myLinks.set(i, "https://www." + myLinks.get(i));
                 //System.out.println(Thread.currentThread().getName()+" crawls with : "+myLinks.get(i));
-                if(Thread.currentThread().isInterrupted())
+                if (Thread.currentThread().isInterrupted())
                     break;
                 try {
-                    crawl(myLinks.get(i),URLs);
+                    crawl(myLinks.get(i), URLs);
                 } catch (IOException e) {
                     //e.printStackTrace();
                     //System.out.println("~~");
                 }
             }
-            for(Pair p:URLs)
-            {
-               //System.out.println("\n******************** adham **********************\n");
-                ArrayList<String>keys=(ArrayList<String>)p.first;
-                ArrayList<Object>values=(ArrayList<Object>)p.second;
+            for (Pair p : URLs) {
+                //System.out.println("\n******************** adham **********************\n");
+                ArrayList<String> keys = (ArrayList<String>) p.first;
+                ArrayList<Object> values = (ArrayList<Object>) p.second;
                 //System.out.println(values.get(0));
                 //System.out.println(popularity.get(values.get(0)));
-                values.set(3,popularity.get(values.get(0)));
-                db.insertToDB("URLs",keys,values);
+                db.insertToDB("URLs", keys, values);
             }
         }
     }
@@ -66,7 +64,6 @@ public class Crawler {
     public Crawler(int num)  {
         db= new DB();
         setCounter();
-
         links=new HashSet<String>();
         compactStrings=new HashSet<String>();
         popularity=new HashMap<String,Integer>();
@@ -102,22 +99,32 @@ public class Crawler {
                 //System.out.println("Error with joining");
             }
         }
+        for (Map.Entry<String, Integer> entry : popularity.entrySet()) {
+            ArrayList<String> keys = new ArrayList<>();
+            ArrayList<Object> values = new ArrayList<>();
+            keys.add("host");
+            values.add(entry.getKey());
+            keys.add("popularity");
+            values.add(entry.getValue());
+            db.insertToDB("HostPopularity", keys, values);
+        }
         db.updateDB("Globals","key","counter","value",numberOfLinks);
     }
 
     public void crawl(String url,ArrayList<Pair>URLs) throws IOException {
         Document doc = null;
+        URL thisURL=new URL(url);
         synchronized (links) {
             if (numberOfLinks >= LIMIT) {
                 return;
             }
+            popularity.putIfAbsent(thisURL.getHost(),0);
+            popularity.put(thisURL.getHost(),popularity.get(thisURL.getHost())+1);
             if (links.contains(url))
             {
                 return;
             }
             links.add(url);
-            popularity.putIfAbsent(url,0);
-            popularity.put(url,popularity.get(url)+1);
         }
         doc = request(url);
         if(doc == null)
@@ -134,7 +141,7 @@ public class Crawler {
             if (numberOfLinks >= LIMIT) {
                 return;
             }
-            if (compactStrings.contains(C_String) || C_String.length() < 50) {
+            if (compactStrings.contains(C_String)) {
                 return;
             }
             compactStrings.add(C_String);
@@ -145,7 +152,6 @@ public class Crawler {
         keys.add("url");values.add(url);
         keys.add("id");values.add(urlID);
         keys.add("CompactString");values.add(C_String);
-        keys.add("popularity");values.add(0);
         ArrayList<Integer>paragraphs=new ArrayList<Integer>();
         keys.add("paragraphs");values.add(paragraphs);
         String title = doc.select("title").text();

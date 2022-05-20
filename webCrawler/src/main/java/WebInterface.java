@@ -131,20 +131,7 @@ public class WebInterface extends HttpServlet {
                 "                        <!-- Users tab -->\n" +
                 "                        <div class=\"tab-pane\" id=\"users\">\n" +
                 "\n" +
-                "\n" +
-                "                            \n" +
-                "                            \n" +
-                "                           \n" +
-                "                            <ul class=\"pagination justify-content-end pagination-split mt-0\">\n" +
-                "                                <li class=\"page-item\"><a class=\"page-link\" href=\"#\" aria-label=\"Previous\"><span aria-hidden=\"true\">«</span> <span class=\"sr-only\">Previous</span></a></li>\n" +
-                "                                <li class=\"page-item\"><a class=\"page-link\" href=\"#\">1</a></li>\n" +
-                "                                <li class=\"page-item active\"><a class=\"page-link\" href=\"#\">2</a></li>\n" +
-                "                                <li class=\"page-item\"><a class=\"page-link\" href=\"#\">3</a></li>\n" +
-                "                                <li class=\"page-item\"><a class=\"page-link\" href=\"#\">4</a></li>\n" +
-                "                                <li class=\"page-item\"><a class=\"page-link\" href=\"#\">5</a></li>\n" +
-                "                                <li class=\"page-item\"><a class=\"page-link\" href=\"#\" aria-label=\"Next\"><span aria-hidden=\"true\">»</span> <span class=\"sr-only\">Next</span></a></li>\n" +
-                "                            </ul>\n" +
-                "                            <div class=\"clearfix\"></div>\n" +
+                "                        <div class=\"clearfix\"></div>\n" +
                 "                        </div>\n" +
                 "                        <!-- end Users tab -->\n" +
                 "                    </div>\n" +
@@ -236,15 +223,21 @@ public class WebInterface extends HttpServlet {
                 "let curr = 1;\n" +
                 "let min = 1;\n" +
                 "let max = 10;\n" +
+                "let big = 1;\n" +
                 "let totalPages = " + NumberOfPages + ";\n" +
-                "       if (totalPages < 15) {\n" +
+                "       if (totalPages <= 1) {\n" +
                 "           let next = document.getElementById(\"next\");\n" +
                 "           let previous = document.getElementById(\"previous\");\n" +
                 "           next.style.display = \"none\";\n" +
                 "           previous.style.display = \"none\";\n" +
+                "           big = 0;\n" +
+                "       }\n" +
+                "       else {\n" +
+                "           let previous = document.getElementById(\"previous\");\n" +
+                "           previous.style.display = \"none\";\n" +
                 "       }\n" +
                 "function viewPage(page) {\n" +
-                "   curr = page;\n" +
+                "   curr = page + 1;\n" +
                 "   window.location.href='#';\n" +
                 "   for (let i = 0; i < " + NumberOfPages + "; i++) {\n" +
                 "       let name = \"shown\" + i.toString();\n" +
@@ -286,6 +279,56 @@ public class WebInterface extends HttpServlet {
                 "           max = max - 1;\n" +
                 "           min = min - 1;\n" +
                 "       }\n" +
+                "       if (big &&  (curr == totalPages)) {\n" +
+                "           let next = document.getElementById(\"next\");\n" +
+                "           next.style.display = \"none\";\n" +
+                "       }\n" +
+                "       if (big && (curr < totalPages)) {\n" +
+                "           let next = document.getElementById(\"next\");\n" +
+                "           next.style.display = \"block\";\n" +
+                "       }\n" +
+                "       if (big && curr == 1) {\n" +
+                "           let previous = document.getElementById(\"previous\");\n" +
+                "           previous.style.display = \"none\";\n" +
+                "       }\n" +
+                "       if (big && curr > 1) {\n" +
+                "           let previous = document.getElementById(\"previous\");\n" +
+                "           previous.style.display = \"block\";\n" +
+                "       }\n" +
+                "}\n" +
+                "function limit(dir) {\n" +
+                "   if (dir == 0) {\n" +
+                "       viewPage(curr - 2);\n" +
+//                "       for (let i = curr - 5; i < curr; i++) {\n" +
+//                "           if (i >= 0 && i < totalPages) {\n" +
+//                "           let v = document.getElementById(\"selected\" + i.toString());\n" +
+//                "           v.removeAttribute(\"hidden\");\n" +
+//                "           if (v.style.display == \"none\") {\n" +
+//                "               let last = document.getElementById(\"selected\" + (max - 1).toString());\n" +
+//                "               last.style.display = \"none\";\n" +
+//                "               min = min - 1;" +
+//                "               max = max - 1;" +
+//                "           }\n" +
+//                "           v.style.display = \"block\";\n" +
+//                "           }\n" +
+//                "       }\n" +
+                "   }\n" +
+                "   else {\n" +
+                "       viewPage(curr);\n" +
+//                "       for (let i = curr - 1; i < curr + 4; i++) {\n" +
+//                "           if (i >= 0 && i < totalPages) {\n" +
+//                "           let v = document.getElementById(\"selected\" + i.toString());\n" +
+//                "           if (v.style.display == \"none\" || (window.getComputedStyle(v).display === \"none\")) {\n" +
+//                "               let last = document.getElementById(\"selected\" + (min - 1).toString());\n" +
+//                "               last.style.display = \"none\";\n" +
+//                "               min = min + 1;" +
+//                "               max = max + 1;" +
+//                "           }\n" +
+//                "           v.removeAttribute(\"hidden\");\n" +
+//                "           v.style.display = \"block\";\n" +
+//                "           }\n" +
+//                "       }\n" +
+                "   }\n" +
                 "}\n" +
                 "function empty() {\n" +
                 "      var x;\n" +
