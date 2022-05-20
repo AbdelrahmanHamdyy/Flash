@@ -52,14 +52,17 @@ public class WebInterface extends HttpServlet {
                 myOutput[index] += "</div>";
                 index++;
             }
+            buttons.append("<li class=\"page-item\"><button id=\"previous\" onclick=\"limit(0)\" class=\"page-link\"><<</button></li>");
             for (int j = 0; j < NumberOfPages; j++) {
                 Results.append(myOutput[j]);
                 if (j == 0)
                     buttons.append("<li class=\"page-item\"><button id=\"selected" + j + "\" style=\"background-color: lightblue; font-weight: bold;\" onclick=\"viewPage("+j+")\" class=\"page-link\">" + (j + 1) + "</button></li>");
-                else
+                else if (j > 0 && j < 10)
                     buttons.append("<li class=\"page-item\"><button id=\"selected" + j + "\" onclick=\"viewPage("+j+")\" class=\"page-link\">" + (j + 1) + "</button></li>");
-
+                else
+                    buttons.append("<li class=\"page-item\"><button hidden id=\"selected" + j + "\" onclick=\"viewPage("+j+")\" class=\"page-link\">" + (j + 1) + "</button></li>");
             }
+            buttons.append("<li class=\"page-item\"><button id=\"next\" onclick=\"limit(1)\" class=\"page-link\">>></button></li>");
         }
         else
         {
@@ -115,9 +118,9 @@ public class WebInterface extends HttpServlet {
                 "                        <div class=\"tab-pane active\" id=\"home\">\n" +
                 "                            <div class=\"row\">\n" +
                 "                                <div class=\"col-md-12\">\n" +
-                                                        Results +
+                Results +
                 "                                    <ul class=\"pagination justify-content-end pagination-split mt-0\">\n" +
-                                                        buttons +
+                buttons +
                 "                                        <!--<li class=\"page-item\"><a class=\"page-link\" href=\"#\" aria-label=\"Next\"><span aria-hidden=\"true\">»</span> <span class=\"sr-only\">Next</span></a></li>-->\n" +
                 "                                    </ul>" +
                 "                                    <div class=\"clearfix\"></div>\n" +
@@ -230,7 +233,18 @@ public class WebInterface extends HttpServlet {
                 "</style>\n" +
                 "\n" +
                 "<script type=\"text/javascript\">\n" +
+                "let curr = 1;\n" +
+                "let min = 1;\n" +
+                "let max = 10;\n" +
+                "let totalPages = " + NumberOfPages + ";\n" +
+                "       if (totalPages < 15) {\n" +
+                "           let next = document.getElementById(\"next\");\n" +
+                "           let previous = document.getElementById(\"previous\");\n" +
+                "           next.style.display = \"none\";\n" +
+                "           previous.style.display = \"none\";\n" +
+                "       }\n" +
                 "function viewPage(page) {\n" +
+                "   curr = page;\n" +
                 "   window.location.href='#';\n" +
                 "   for (let i = 0; i < " + NumberOfPages + "; i++) {\n" +
                 "       let name = \"shown\" + i.toString();\n" +
@@ -249,6 +263,29 @@ public class WebInterface extends HttpServlet {
                 "           buttonSelected.style.fontWeight = 'bold';\n" +
                 "       }\n" +
                 "   }\n" +
+                "       console.log(\"Page: \" + (page + 1));\n" +
+                "       console.log(\"Max: \" + max);\n" +
+                "       console.log(\"Min: \" + min);\n" +
+                "       if ((page + 1) == max && totalPages > 10 && (page + 1) != totalPages) {\n" +
+                "           console.log(\"Max condition\");\n" +
+                "           let last = document.getElementById(\"selected\" + max.toString());\n" +
+                "           let first = document.getElementById(\"selected\" + (min - 1).toString());\n" +
+                "           last.removeAttribute(\"hidden\");\n" +
+                "           last.style.display = \"block\";\n" +
+                "           first.style.display = \"none\";\n" +
+                "           max = max + 1;\n" +
+                "           min = min + 1;\n" +
+                "       }\n" +
+                "       if ((page + 1) == min && totalPages > 10 && (page + 1) != 1) {\n" +
+                "           console.log(\"Min condition\");\n" +
+                "           let last = document.getElementById(\"selected\" + (max - 1).toString());\n" +
+                "           let first = document.getElementById(\"selected\" + (min - 2).toString());\n" +
+                "           first.removeAttribute(\"hidden\");\n" +
+                "           first.style.display = \"block\";\n" +
+                "           last.style.display = \"none\";\n" +
+                "           max = max - 1;\n" +
+                "           min = min - 1;\n" +
+                "       }\n" +
                 "}\n" +
                 "function empty() {\n" +
                 "      var x;\n" +
