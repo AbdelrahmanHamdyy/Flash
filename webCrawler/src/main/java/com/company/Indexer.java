@@ -263,7 +263,8 @@ public class Indexer {
             for (int i = 0; i < M.length; i++) {
                 M[i] = M[i].replaceAll("[^a-zA-Z0-9]","");
                 if (M[i].toLowerCase(Locale.ROOT).equals(word))
-                    M = ArrayUtils.remove(M, i);
+                    M[i] = "";
+                //M = ArrayUtils.remove(M, i);
             }
         }
         return M;

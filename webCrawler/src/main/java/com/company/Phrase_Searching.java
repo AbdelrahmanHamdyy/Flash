@@ -21,6 +21,7 @@ public class Phrase_Searching {
     private    Map<String, ArrayList<ArrayList<Integer> >> indx = new HashMap<>();
     private  HashMap<String, List<String>> Results= new HashMap<>();
     private   List<String> link=new ArrayList<String>();
+    public List<String> stopWords = new ArrayList<>();
     private    String[] query;
     public static  void main(String[] args) {
         String[]word = new String[4];
@@ -39,8 +40,8 @@ public class Phrase_Searching {
 //        }
     }
     public  boolean  phrase(String[]words) throws IOException {
-        Indexer.ReadStopWords();
-        query= Indexer.removeStopWords(words);
+        ReadStopWords();
+        query= removeStopWords(words);
         //query=words;
         int target =query.length;
         boolean flag=false;
@@ -154,5 +155,35 @@ public class Phrase_Searching {
     }
     public HashMap<String, List<String>> getResults() {
         return Results;
+    }
+    public void ReadStopWords() throws FileNotFoundException, IOException {
+        try {
+            File file = new File("stopwords.txt");
+            Scanner Reader = new Scanner(file);
+            while (Reader.hasNextLine()) {
+                stopWords.add(Reader.nextLine().toLowerCase(Locale.ROOT));
+            }
+            Reader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Error!");
+            e.printStackTrace();
+        }
+    }
+    public String[] removeStopWords (String[] M){
+        for(String word : stopWords) {
+            for (int i = 0; i < M.length; i++) {
+                M[i] = M[i].replaceAll("[^a-zA-Z0-9]","");
+                if (M[i].toLowerCase(Locale.ROOT).equals(word))
+                    M[i] = "";
+                //M = ArrayUtils.remove(M, i);
+            }
+        }
+        List<String> arr=new ArrayList<>();
+        for (int i = 0; i < M.length; i++) {
+            if(M[i] != "")
+                arr.add(M[i]);
+            //M = ArrayUtils.remove(M, i);
+        }
+        return arr.toArray(new String[0]);
     }
 }
