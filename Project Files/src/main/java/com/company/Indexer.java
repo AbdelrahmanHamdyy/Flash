@@ -27,9 +27,9 @@ public class Indexer {
 
     public static Stemmer stemmer = new Stemmer(); // Stemmer
 
-    // **** Paragraphs ****
-    public static long numberOfParagraphs;
-    public static ArrayList<Long> paragraphs = new ArrayList<Long>();
+    // ** Paragraphs **
+    public static int numberOfParagraphs;
+    public static ArrayList<Integer> paragraphs = new ArrayList<Integer>();
     public static HashMap<String,Integer>NumberOfWords;
     // Multi-threading
     private ArrayList<Thread> threads;
@@ -81,7 +81,7 @@ public class Indexer {
         setTags();
         ReadStopWords();
         setCounter();
-        numberOfParagraphs = (Long) db.getAttr("Globals","key","paragraphsCounter","value" );
+        numberOfParagraphs = (int) db.getAttr("Globals","key","paragraphsCounter","value" );
         for (int i = 0; i < numOfThreads; i++) {
             int e = s + quantity;
             if (rem != 0) {
@@ -140,8 +140,7 @@ public class Indexer {
         keys.add("value");
         ArrayList<Object> values = new ArrayList<>();
         values.add("paragraphsCounter");
-        long dummy=0;
-        values.add(dummy);
+        values.add(0);
         db.insertToDB("Globals", keys, values);
     }
 

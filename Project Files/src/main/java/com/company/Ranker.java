@@ -42,9 +42,9 @@ public class Ranker {
                 System.out.println(object);
                 String url = (String) object.get("url");
                 double TF_IDF = (double)object.get("TF-IDF");
-                long pid = -1;
+                int pid = -1;
                 if(object.containsKey("paragraphID"))
-                    pid = (long) object.get("paragraphID");
+                    pid = (int) object.get("paragraphID");
                 int weight = (int) object.get("weight");
                 URL thisURL = null;
                 try {

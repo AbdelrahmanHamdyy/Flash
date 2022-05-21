@@ -48,7 +48,7 @@ public class Crawler {
                     e.printStackTrace();
                 }
             }
-            //****** question 2 **************
+            //** question 2 ******
             for (Pair p : URLs) {
                 ArrayList<String> keys = (ArrayList<String>) p.first;
                 ArrayList<Object> values = (ArrayList<Object>) p.second;
@@ -56,10 +56,17 @@ public class Crawler {
             }
         }
     }
-
+    private void Setlinks()
+    {
+        for(int i=0;i<numberOfLinks;i++)
+        {
+            links.add((String)db.getAttr("URLs","id",i,"url"));
+            compactStrings.add((String)db.getAttr("URLs","id",i,"url"));
+        }
+    }
     public Crawler(int num)  {
         db= new DB();
-        //*********** question 3 ***********
+        //**** question 3 ****
         setCounter();
         links=new HashSet<String>();
         compactStrings=new HashSet<String>();
@@ -67,7 +74,8 @@ public class Crawler {
         numberOfLinks=(int)db.getAttr("Globals", "key","counter","value" );
         myLinks=(ArrayList<String>)db.getListOf("CrawlerLinks","url");
         int numOfLinks = myLinks.size();
-        //*********  question 1 **************
+        Setlinks();
+        //***  question 1 ******
         numOfThreads = Math.min(num, numOfLinks);
         threads= new ArrayList<Thread>(numOfThreads);
         int s = 0;
@@ -93,7 +101,7 @@ public class Crawler {
                 System.out.println("Error with joining");
             }
         }
-        //****** question 2 **************
+        //** question 2 ******
         for (Map.Entry<String, Integer> entry : popularity.entrySet()) {
             ArrayList<String> keys = new ArrayList<>();
             ArrayList<Object> values = new ArrayList<>();
@@ -108,7 +116,7 @@ public class Crawler {
 
     public void crawl(String url,ArrayList<Pair>URLs) throws IOException {
         Document doc = null;
-        //****** question 2 **************
+        //** question 2 ******
         URL thisURL=new URL(url);
         String Host=thisURL.getHost();
         synchronized (links) {
@@ -144,7 +152,7 @@ public class Crawler {
             compactStrings.add(C_String);
             urlID=numberOfLinks++;
         }
-        //****** question 2 **************
+        //** question 2 ******
         ArrayList<String>keys=new ArrayList<String>();
         ArrayList<Object>values=new ArrayList<Object>();
         keys.add("url");values.add(url);

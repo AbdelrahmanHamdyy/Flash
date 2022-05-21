@@ -1,0 +1,211 @@
+body {
+    margin: 0;
+  }
+
+form {
+    width: 100%;
+    display:flex;
+    flex-direction: row;
+}
+
+  
+form .inner-form {
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    -ms-flex-pack: justify;
+    -ms-flex-align: center;
+    align-items: center;
+    border-radius: 34px;
+    overflow: hidden;
+    margin-left:250px;
+    margin-bottom:12px;
+    max-width: 500px;
+
+  }
+  
+form .inner-form .input-field {
+    height: 55px;
+    border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
+
+ 
+  }
+  form .inner-form .first-wrap{
+      margin-top:0.03px;
+    border:1px solid black;
+    border-right: 0px;
+    height:52.93px !important;
+    box-shadow: 0px 2px rgb(0,0,0,0.2);
+  } 
+form .inner-form .input-field input {
+    height: 100%;
+    background: transparent;
+    border: 0;
+    display: block;
+    width: 100%;
+    padding: 15px 0;
+    font-size: 16px;
+    color: #000;
+  }
+  
+form .inner-form .input-field input.placeholder {
+    color: #222;
+    font-size: 16px;
+  }
+  
+form .inner-form .input-field input:-moz-placeholder {
+    color: #222;
+    font-size: 16px;
+  }
+  
+form .inner-form .input-field input::-webkit-input-placeholder {
+    color: #222;
+    font-size: 16px;
+  }
+  
+form .inner-form .input-field input:hover, form .inner-form .input-field input:focus {
+    box-shadow: none;
+    border: 0;
+    outline: 0;
+  }
+  
+form .inner-form .input-field.first-wrap {
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    background: #f5f5f5;
+  }
+  
+form .inner-form .input-field.first-wrap input {
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+  }
+form .inner-form .input-field.first-wrap .svg-wrapper {
+    min-width: 80px;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
+form .inner-form .input-field.first-wrap svg {
+    width: 36px;
+    height: 36px;
+    fill: #222;
+    transition: all .5s ease-out, color .5s ease-out;
+  }
+form .inner-form .input-field .svg-wrapper:hover svg, .s005 form .inner-form .input-field .svg-wrapper:focus svg {
+    fill: #2900f6;
+  }
+  
+form .inner-form .input-field.second-wrap {
+    min-width: 216px;
+  }
+  
+form .inner-form .input-field.second-wrap .btn-search {
+    height: 100%;
+    border:1px solid black !important;
+    border-left:0;
+    width: 60%;
+    white-space: nowrap;
+    font-size: 16px;
+    color: #fff;
+    border: 0;
+    cursor: pointer;
+    position: relative;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    z-index: 0;
+    background: #0003c0;
+    transition: all .5s ease-out, color .5s ease-out;
+    font-weight: 300;
+    box-shadow: 0px 2px rgb(0,0,0,0.2);
+  }
+  
+form .inner-form .input-field.second-wrap .btn-search:hover {
+    background: #190094;
+  }
+  
+form .inner-form .input-field.second-wrap .btn-search:focus {
+    outline: 0;
+    box-shadow: none;
+  }
+form .info {
+    font-size: 15px;
+    color: rgb(204, 204, 204);
+    padding-left: 26px;
+  }
+  
+  @media screen and (max-width: 992px) {
+form .inner-form .input-field {
+      height: 50px;
+    }
+  }
+  
+  @media screen and (max-width: 767px) {
+    .s130 form .inner-form .input-field.first-wrap .svg-wrapper {
+      min-width: 40px;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-pack: center;
+          justify-content: center;
+      -ms-flex-align: center;
+          align-items: center;
+      padding: 0 10px;
+    }
+    .s130 form .inner-form .input-field.first-wrap svg {
+      width: 26px;
+      height: 26px;
+      fill: #222;
+    }
+    .s130 form .inner-form .input-field.second-wrap {
+      min-width: 100px;
+    }
+    .s130 form .inner-form .input-field.second-wrap .btn-search {
+      font-size: 13px;
+    }
+  }
+  /*.Logo{
+    text-align: center;
+    font-size: 48px;
+    color:#00eeff;
+  }*/
+  h1{
+    text-align:center;
+    background:linear-gradient(to right,#84c2f7,#6ebcff,#50adff,#2197ff,#0058af);
+    background-size:400%;
+    font-weight: 600px;
+    -webkit-text-fill-color:transparent;
+    -webkit-background-clip: text;
+    animation: animate 20s ease infinite;
+    animation-direction: reverse;
+    margin-bottom: 65px;
+    font-size: 55px;
+    margin-left:50px;
+  }
+  
+  @keyframes animate {
+    0%{
+        background-position: 0%;
+    }
+    25%{
+        background-position: 100%;
+    }
+  
+    50%{
+        background-position: 200%;
+    }
+    
+    75%{
+        background-position: 300%;
+    }
+    100%{
+        background-position: 400%;
+    }
+  }
+  
