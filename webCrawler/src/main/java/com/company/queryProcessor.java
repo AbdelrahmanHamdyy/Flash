@@ -83,12 +83,22 @@ public class queryProcessor {
         Pair p=new Pair();
         if(isPhrase)
         {
+            System.out.println("yaged3an");
             if(phraser.phrase(words))
             {
+                System.out.println("sabah kerez fl safe side wana offside");
                 p.first=phraser.getOutput();
                 p.second=phraser.getResults();
+                for(String s:phraser.getOutput())
+                {
+                    System.out.println(s+" ******************** hamdy ******************** hamdy **************************");
+                }
                 if(((List<String>)p.first).size()==0)
+                {
+                    System.out.println("nu3man");
                     return null;
+                }
+
                 return p;
             }
         }

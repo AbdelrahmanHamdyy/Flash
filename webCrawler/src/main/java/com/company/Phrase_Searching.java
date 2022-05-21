@@ -23,42 +23,22 @@ public class Phrase_Searching {
     private   List<String> link=new ArrayList<String>();
     public List<String> stopWords = new ArrayList<>();
     private    String[] query;
-    public static  void main(String[] args) {
-        String[]word = new String[4];
-        word[0] = "Deal";
-        word[1] = "With";
-        word[2] = "With";
-        word[3] = "With";
-
-//        phase(word);
-//        System.out.println("Phrase");
-//        if(Results==null)
-//            return;
-//        for (Map.Entry<String, List<String>> entry : Results.entrySet()){
-//            //
-//            System.out.println(entry.getKey()+" "+entry.getValue());
-//        }
-    }
     public  boolean  phrase(String[]words) throws IOException {
         ReadStopWords();
         query= removeStopWords(words);
-        //query=words;
+
         int target =query.length;
         boolean flag=false;
         for(int i=0;i<query.length;i++)
         {
             flag=false;
-            //System.out.println(query[i]);
             String lowerCaseString=query[i].toLowerCase();
             List<Document>docs=(List<Document>)db.getAttr("words","word",lowerCaseString,"urls");
-            System.out.println(docs);
             if(docs==null)
             {
                 return false;
             }
             for (Document object :  docs) {
-                // System.out.println(docs);
-                // System.out.println(object);
                 String url = (String) object.get("url");
                 ArrayList<Integer> post =(ArrayList<Integer>) object.get("positions");
                 count.putIfAbsent(url, 0);
@@ -70,13 +50,9 @@ public class Phrase_Searching {
                 }
             }
         }
-        for (Map.Entry<String, ArrayList<ArrayList<Integer> >> entry : indx.entrySet()){
-            System.out.println("**indx "+entry.getKey()+" "+entry.getValue());
-        }
+
         check();
-        for (Map.Entry<String, List<String>> entry : Results.entrySet()) {
-            System.out.println("***eslam "+entry.getKey() + " " + entry.getValue());
-        }
+
         return true;
     }
     public   void check (){
@@ -85,15 +61,12 @@ public class Phrase_Searching {
             int n=indx.get(entry.getKey()).size();
             int count=0;
             boolean flag=true;
-            // System.out.println(entry.getKey());
             for(int i=0;i<first.size();i++)
             {
                 flag=true;
                 for(int j=1;j<n;j++){
                     if(!indx.get(entry.getKey()).get(j).contains(indx.get(entry.getKey()).get(0).get(i)+j)){
                         flag= false;
-                        // System.out.println(entry.getKey()+" "+indx.get(entry.getKey()).get(0).get(i));
-                        //System.out.println(indx.get(entry.getKey()).get(j));
                         break;
                     }
                 }
@@ -102,12 +75,7 @@ public class Phrase_Searching {
             }
             if (count > 0) {
                 temp.put(entry.getKey(), count);
-                //System.out.println(entry.getKey());
             }
-        }
-        for (Map.Entry<String, Integer> entry : temp.entrySet()){
-            //
-            //  System.out.println(entry.getKey()+" "+entry.getValue());
         }
         sortByValue(false);
         for (Map.Entry<String, Integer> entry : temp.entrySet()){
@@ -122,7 +90,7 @@ public class Phrase_Searching {
                 String original =(String) db.getAttr("Paragraphs", "id",pra.get(i) , "content");
                 String content=original.toLowerCase();
                 String[] contentArr=content.split(" ");
-                contentArr=Indexer.removeStopWords(contentArr);
+                contentArr=removeStopWords(contentArr);
                 content=String.join(" ",contentArr);
                 if(content.contains(paragraphs)){
                     result=original;
@@ -153,12 +121,13 @@ public class Phrase_Searching {
     public List<String> getOutput() {
         return link;
     }
-    public HashMap<String, List<String>> getResults() {
+    public HashMap<String, List<String>> getResults()
+    {
         return Results;
     }
     public void ReadStopWords() throws FileNotFoundException, IOException {
         try {
-            File file = new File("stopwords.txt");
+            File file = new File("D:\\CMP\\CMP4\\APT\\project\\Search-Engine\\webCrawler\\stopwords.txt");
             Scanner Reader = new Scanner(file);
             while (Reader.hasNextLine()) {
                 stopWords.add(Reader.nextLine().toLowerCase(Locale.ROOT));
@@ -175,14 +144,12 @@ public class Phrase_Searching {
                 M[i] = M[i].replaceAll("[^a-zA-Z0-9]","");
                 if (M[i].toLowerCase(Locale.ROOT).equals(word))
                     M[i] = "";
-                //M = ArrayUtils.remove(M, i);
             }
         }
         List<String> arr=new ArrayList<>();
         for (int i = 0; i < M.length; i++) {
             if(M[i] != "")
                 arr.add(M[i]);
-            //M = ArrayUtils.remove(M, i);
         }
         return arr.toArray(new String[0]);
     }

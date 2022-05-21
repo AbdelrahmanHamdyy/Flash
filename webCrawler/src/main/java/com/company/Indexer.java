@@ -28,8 +28,8 @@ public class Indexer {
     public static Stemmer stemmer = new Stemmer(); // Stemmer
 
     // **** Paragraphs ****
-    public static int numberOfParagraphs;
-    public static ArrayList<Integer> paragraphs = new ArrayList<Integer>();
+    public static long numberOfParagraphs;
+    public static ArrayList<Long> paragraphs = new ArrayList<Long>();
     public static HashMap<String,Integer>NumberOfWords;
     // Multi-threading
     private ArrayList<Thread> threads;
@@ -47,7 +47,7 @@ public class Indexer {
         public void run() {
             for (int i = start; i < end; i++) {
                 String url = (String) db.getAttr("URLs","id", i,"url");
-                Integer numOfWords=(int)(long) db.getAttr("URLs","id", i,"NumberOfWords");
+                Integer numOfWords=(int)db.getAttr("URLs","id", i,"NumberOfWords");
                 NumberOfWords.put(url,numOfWords);
                 Document doc = null;
                 try {
@@ -59,7 +59,9 @@ public class Indexer {
                 paragraphs.clear();
                 if (doc != null) {
                     RunIndexer(doc, url, pageIndex);
-                    db.updateDB("URLs", "url", url, "paragraphs", paragraphs);
+                    ArrayList<Long>temp=(ArrayList<Long>)db.getAttr("URLs", "url", url, "paragraphs");
+                    temp.addAll(paragraphs);
+                    db.updateDB("URLs", "url", url, "paragraphs", temp);
                 }
             }
         }
@@ -78,7 +80,7 @@ public class Indexer {
         setTags();
         ReadStopWords();
         setCounter();
-        numberOfParagraphs = (int) db.getAttr("Globals","key","paragraphsCounter","value" );
+        numberOfParagraphs = (Long) db.getAttr("Globals","key","paragraphsCounter","value" );
         for (int i = 0; i < numOfThreads; i++) {
             int e = s + quantity;
             if (rem != 0) {
@@ -149,6 +151,8 @@ public class Indexer {
         }
     }
 
+
+
     public static void indexing(String tag, Document doc, int weight,String url, int pageIndex) {
         Elements elements = doc.select(tag);
         for (Element i : elements) {
@@ -159,6 +163,8 @@ public class Indexer {
             paragraphs.add(numberOfParagraphs);
             keys.add("id");
             values.add(numberOfParagraphs++);
+            keys.add("url");
+            values.add(url);
             keys.add("content");
             if(sz<=400)
             {

@@ -40,22 +40,18 @@ public class Crawler {
         public void run() {
             for (int i = start; i < end; i++) {
                 myLinks.set(i, "https://www." + myLinks.get(i));
-                //System.out.println(Thread.currentThread().getName()+" crawls with : "+myLinks.get(i));
                 if (Thread.currentThread().isInterrupted())
                     break;
                 try {
                     crawl(myLinks.get(i), URLs);
                 } catch (IOException e) {
-                    //e.printStackTrace();
-                    //System.out.println("~~");
+                    e.printStackTrace();
                 }
             }
+            //****** question 2 **************
             for (Pair p : URLs) {
-                //System.out.println("\n******************** adham **********************\n");
                 ArrayList<String> keys = (ArrayList<String>) p.first;
                 ArrayList<Object> values = (ArrayList<Object>) p.second;
-                //System.out.println(values.get(0));
-                //System.out.println(popularity.get(values.get(0)));
                 db.insertToDB("URLs", keys, values);
             }
         }
@@ -63,28 +59,26 @@ public class Crawler {
 
     public Crawler(int num)  {
         db= new DB();
+        //*********** question 3 ***********
         setCounter();
         links=new HashSet<String>();
         compactStrings=new HashSet<String>();
         popularity=new HashMap<String,Integer>();
         numberOfLinks=(int)db.getAttr("Globals", "key","counter","value" );
-        //System.out.println("counter : "+numberOfLinks);
         myLinks=(ArrayList<String>)db.getListOf("CrawlerLinks","url");
-        //System.out.println("WebCrawler is created"+myLinks);
         int numOfLinks = myLinks.size();
+        //*********  question 1 **************
         numOfThreads = Math.min(num, numOfLinks);
         threads= new ArrayList<Thread>(numOfThreads);
         int s = 0;
         int quantity = numOfLinks / numOfThreads;
         int rem = numOfLinks % numOfThreads;
-        //System.out.println("numOfLinks : " + numOfLinks + " numOfThreads : " + numOfThreads + " quantity : " + quantity + " rem : " + rem);
         for (int i = 0; i < numOfThreads; i++) {
             int e = s + quantity;
             if (rem != 0) {
                 e++;
                 rem--;
             }
-            //System.out.println(i+" Starts with : "+s+" Ends with : "+e);
             Thread temp = new Thread(new myThread(s, e));
             s = e;
             temp.setName(Integer.toString(i));
@@ -96,9 +90,10 @@ public class Crawler {
             try {
                 i.join();
             } catch (InterruptedException exe) {
-                //System.out.println("Error with joining");
+                System.out.println("Error with joining");
             }
         }
+        //****** question 2 **************
         for (Map.Entry<String, Integer> entry : popularity.entrySet()) {
             ArrayList<String> keys = new ArrayList<>();
             ArrayList<Object> values = new ArrayList<>();
@@ -113,13 +108,15 @@ public class Crawler {
 
     public void crawl(String url,ArrayList<Pair>URLs) throws IOException {
         Document doc = null;
+        //****** question 2 **************
         URL thisURL=new URL(url);
+        String Host=thisURL.getHost();
         synchronized (links) {
             if (numberOfLinks >= LIMIT) {
                 return;
             }
-            popularity.putIfAbsent(thisURL.getHost(),0);
-            popularity.put(thisURL.getHost(),popularity.get(thisURL.getHost())+1);
+            popularity.putIfAbsent(Host,0);
+            popularity.put(Host,popularity.get(Host)+1);
             if (links.contains(url))
             {
                 return;
@@ -147,6 +144,7 @@ public class Crawler {
             compactStrings.add(C_String);
             urlID=numberOfLinks++;
         }
+        //****** question 2 **************
         ArrayList<String>keys=new ArrayList<String>();
         ArrayList<Object>values=new ArrayList<Object>();
         keys.add("url");values.add(url);
@@ -214,19 +212,16 @@ public class Crawler {
         else
             return true;
         Connection connect = Jsoup.connect(Robots_Link);
-        //System.out.println(Robots_Link);
         //here we take the whole content of url/robots.txt
         Document SpecialDoc = connect.get();
         String FullContent=SpecialDoc.outerHtml();
         //now we start searching for what we cannot search in
         int StartIndex=FullContent.indexOf("User-agent: *");
-        //System.out.println(StartIndex);
         if(StartIndex!=-1)
         {
             //now we find our User-agent:*
             //we will start to crop the whole content until we find User-agent:*
             //here is the content from User-agent:* till the end
-            //System.out.println("UserAgentFound");
             String subOne = FullContent.substring(StartIndex);
             //we will crop User-agent:* it has done it's mission
             int SubStart=subOne.indexOf("Disallow");
@@ -238,7 +233,6 @@ public class Crawler {
                 SubStart=SecondSubStart;
             if(SecondSubStart==-1 && SubStart==-1)
             {
-                //System.out.println("No Disallow");
                 return true;
             }
             //now we make sure that we have just found disallow statement
@@ -276,12 +270,9 @@ public class Crawler {
                 WhileString=WhileString.substring(WhileEnd);
             }
         }
-        else{
-            //System.out.println("No UserAgent");
-        }
         for(int i=0;i< ForbiddenLinks.size();i++)
         {
-            //System.out.println(ForbiddenLinks.get(i));
+
             String Path = Specific_Url.getPath();
             String UnwantedStringTemp = ForbiddenLinks.get(i);
             int index=UnwantedStringTemp.indexOf('*');
@@ -300,7 +291,6 @@ public class Crawler {
             if (Path.contains(UnwantedStringTemp))
                 return false;
         }
-        //System.out.println(ForbiddenLinks.size());
         return true;
     }
 }
