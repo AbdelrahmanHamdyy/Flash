@@ -86,5 +86,17 @@ public class DB {
             col.findOneAndUpdate(filter, update, options);
         }
     }
+    public Object getCollection(String collectionName)
+    {
+        MongoCollection<Document> col = db.getCollection(collectionName);
+
+        FindIterable<Document> ListOfdoc = col.find();
+        ArrayList<Object>result=new ArrayList<Object>();
+        for(Document i:ListOfdoc)
+        {
+            result.add(i);
+        }
+        return result;
+    }
 
 }

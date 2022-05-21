@@ -1,5 +1,6 @@
 package com.company;
 
+import com.mongodb.BasicDBObject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -60,9 +61,12 @@ public class Crawler {
     {
         for(int i=0;i<numberOfLinks;i++)
         {
-            links.add((String)db.getAttr("URLs","id",i,"url"));
+            String url=(String)db.getAttr("URLs","id",i,"url");
+            links.add(url);
             compactStrings.add((String)db.getAttr("URLs","id",i,"url"));
         }
+        ArrayList<BasicDBObject>popularityArray=(ArrayList<BasicDBObject>)db.getCollection("HostPopularity");
+        for(BasicDBObject i:popularityArray)popularity.put((String)i.get("host"),(int)i.get("popularity"));
     }
     public Crawler(int num)  {
         db= new DB();
