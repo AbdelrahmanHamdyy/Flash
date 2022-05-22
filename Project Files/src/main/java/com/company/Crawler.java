@@ -164,7 +164,13 @@ public class Crawler {
         keys.add("CompactString");values.add(C_String);
         ArrayList<Integer>paragraphs=new ArrayList<Integer>();
         keys.add("paragraphs");values.add(paragraphs);
-        String title = doc.select("title").text();
+        String title = doc.select("head>title").text();
+        if (title.isEmpty()) {
+            if (doc.select("title").first() != null)
+                title = doc.select("title").first().text();
+            else
+                title = doc.select("title").text();
+        }
         String link= doc.body().text();
         NumberOfWords=link.length();
         keys.add("title"); values.add(title);

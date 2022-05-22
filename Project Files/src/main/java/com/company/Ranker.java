@@ -53,13 +53,16 @@ public class Ranker {
                     throw new RuntimeException(e);
                 }
                 String Host = thisURL.getHost();
-                int popularity = (int) db.getAttr("HostPopularity", "host", Host, "popularity");
-                if (!(url ).equals("https://" + Host) && popularity > 1)
-                    popularity /= 2;
+                Object obj = db.getAttr("HostPopularity", "host", Host, "popularity");
+                if (obj == null)
+                    continue;
+                int popularity = (int) (obj);
+                if (!(url).equals("https://" + Host + "/") && popularity > 1)
+                    popularity = (int) Math.ceil((double) popularity / 100);
                 double relevance = TF_IDF * weight;
                 double Priority = relevance * popularity;
                 if (sortedMap.containsKey(url)) {
-                    sortedMap.replace(url, Priority + sortedMap.get(url) + (5 * stem));
+                    sortedMap.replace(url, Priority + sortedMap.get(url) * (10 * stem));
                     // We multiply the stem factor by 5 if the url is already found because it makes more sense to
                     // give urls that contain more words from the search query a higher priority to be displayed
                 }

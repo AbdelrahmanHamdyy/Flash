@@ -122,13 +122,13 @@ public class Indexer {
 
     public static void setTags() {
         // Weights
-        tags.put("title",100);
-        tags.put("h1",40);
-        tags.put("h2",20);
-        tags.put("h3",10);
-        tags.put("h4",8);
-        tags.put("h5",6);
-        tags.put("h6",5);
+        tags.put("title",500);
+        tags.put("h1",80);
+        tags.put("h2",60);
+        tags.put("h3",40);
+        tags.put("h4",30);
+        tags.put("h5",20);
+        tags.put("h6",10);
         tags.put("p",4);
     }
 
