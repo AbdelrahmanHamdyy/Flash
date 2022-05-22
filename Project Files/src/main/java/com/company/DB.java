@@ -86,7 +86,7 @@ public class DB {
             col.findOneAndUpdate(filter, update, options);
         }
     }
-    public Object getCollection(String collectionName)
+    public Object getTwoAttrs(String collectionName,String attr1,String attr2)
     {
         MongoCollection<Document> col = db.getCollection(collectionName);
 
@@ -94,9 +94,11 @@ public class DB {
         ArrayList<Object>result=new ArrayList<Object>();
         for(Document i:ListOfdoc)
         {
-            result.add(i);
+            Pair p=new Pair();
+            p.first=i.get(attr1);
+            p.second=i.get(attr2);
+            result.add(p);
         }
         return result;
     }
-
 }

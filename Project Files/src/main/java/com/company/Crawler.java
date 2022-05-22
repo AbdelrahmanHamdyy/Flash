@@ -20,7 +20,7 @@ public class Crawler {
     private ArrayList<String>myLinks;
     private HashSet<String>links;
     private HashSet<String>compactStrings;
-    private long NumberOfWords;
+    private int NumberOfWords;
     private CompactString CS = new CompactString();
     private DB db ;
     private int numberOfLinks;
@@ -40,7 +40,7 @@ public class Crawler {
         @Override
         public void run() {
             for (int i = start; i < end; i++) {
-                myLinks.set(i, "https://www." + myLinks.get(i));
+                myLinks.set(i,myLinks.get(i));
                 if (Thread.currentThread().isInterrupted())
                     break;
                 try {
@@ -65,8 +65,8 @@ public class Crawler {
             links.add(url);
             compactStrings.add((String)db.getAttr("URLs","id",i,"url"));
         }
-        ArrayList<BasicDBObject>popularityArray=(ArrayList<BasicDBObject>)db.getCollection("HostPopularity");
-        for(BasicDBObject i:popularityArray)popularity.put((String)i.get("host"),(int)i.get("popularity"));
+        ArrayList<Pair>popularityArray=(ArrayList<Pair>)db.getTwoAttrs("HostPopularity","host","popularity");
+        for(Pair i:popularityArray)popularity.put((String)i.first,(int)i.second);
     }
     public Crawler(int num)  {
         db= new DB();
