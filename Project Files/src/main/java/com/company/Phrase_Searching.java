@@ -127,7 +127,7 @@ public class Phrase_Searching {
     }
     public void ReadStopWords() throws FileNotFoundException, IOException {
         try {
-            File file = new File("D:\\CMP\\CMP4\\APT\\project\\Search-Engine\\webCrawler\\stopwords.txt");
+            File file = new File("D:\\Github\\Search-Engine\\Project Files\\stopwords.txt");
             Scanner Reader = new Scanner(file);
             while (Reader.hasNextLine()) {
                 stopWords.add(Reader.nextLine().toLowerCase(Locale.ROOT));
