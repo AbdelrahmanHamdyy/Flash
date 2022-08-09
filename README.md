@@ -26,17 +26,18 @@
 
 <a id = "about"></a>
 
-## <img align="center"  width =60px  height =70px src="https://media2.giphy.com/media/Yn4nioYWSZMqiPNVuD/giphy.gif?cid=ecf05e47m5h78yoqhdkg8pq54o5qsxhdoltjxyfe08d4vxvg&rid=giphy.gif&ct=s"> Overview
+## <img align="center"  height =50px src="https://user-images.githubusercontent.com/71986226/154076110-1233d7a8-92c2-4d79-82c1-30e278aa518a.gif"> Overview
 
-<br>
 <ul>
 <li> The aim of this project is to develop a simple Crawler- based search engine that demonstrates the main features of a search engine
 and the interaction between them.</li>
 <li> The main features of a search engine</li>
 <br>
+<ul>
 <li> Web Crawling</li>
 <li> Indexing</li>
 <li> Ranking</li>
+</ul>
 <br>
 <li> Build using <a href="https://en.wikipedia.org/wiki/C_(programming_language)">C lnaguage</a>.</li>
 </ul>
@@ -72,7 +73,7 @@ sudo dnf install gcc
 ## <img align= center width=70px height=70px src="https://user-images.githubusercontent.com/71986226/178469374-15498392-26a1-4ba0-99d7-9ce899c131f0.gif"> Data Structures Used
 
 <br>
-<ol>
+<ul>
 <li>Queue</li>
 <li>Priority Queue</li>
 <li>Process Data
@@ -106,7 +107,7 @@ sudo dnf install gcc
 <li>Memory Size</li>
 </ul>
 </li>
-</ol>
+</ul>
 <hr style="background-color: #4b4c60"></hr>
  <a id ="Algorithms"></a>
 
