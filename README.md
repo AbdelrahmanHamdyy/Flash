@@ -1,10 +1,10 @@
 <div align= >
 
-# <img align=center width=75px height=75px src="https://media3.giphy.com/media/OEDg5jvoZzYbBxqoRL/giphy.gif?cid=ecf05e472c40ymhxtl46b0gpa6vaexyzeqph7p3eov22ozpw&rid=giphy.gif&ct=s"> Operating System Scheduler
+# <img align=center width=50px height=50px src="https://media0.giphy.com/media/CVrs76nnBvU7azfTLj/giphy.gif?cid=ecf05e47om1y68g5als66xi5mn32ui6gk2g8wpnv145ag265&rid=giphy.gif&ct=s"> Flash
 
 </div>
 <p align="center">
-   <img align="center" width=600px height=450px src="https://cdn.dribbble.com/users/1243527/screenshots/4928430/file-transfer.gif" alt="logo">
+   <img align="center" width="800px"  src="https://user-images.githubusercontent.com/71986226/183626365-0709b859-60b9-4738-b53e-b19261018304.jpg" alt="logo">
 </p>
 
 <p align="center"> 
@@ -76,111 +76,6 @@ sudo dnf install gcc
 </li>
 </ol>
 <hr style="background-color: #4b4c60"></hr>
-
-## <img align= "center" width=80px height=80px src="https://media2.giphy.com/media/dAu3qBzpmXstCTimDv/giphy.gif?cid=ecf05e475rq4hwxg7usfm1go2dc1pl5gpbnvo1izu6ph4yuh&rid=giphy.gif&ct=s"> Path of the program <a id ="Path"></a>
-
-<ol>
-<li>Go to folder <a href="https://github.com/AdhamAliAbdelAal/OS-Project/tree/master/Phase%201/code">Phase 1 </a>
-or  <a href="https://github.com/AdhamAliAbdelAal/OS-Project/tree/master/Phase%202/code">Phase 2 </a> , as you want.
-
-</li>
-<li>Put input in file "processes.txt" or run file "test_generator.c" and it will put random input </li>
-<br>
-<ul><li>Phase 1</li>
-<div  align= "center"  >
-<br>
-
- <img width=300px height=80x src="https://user-images.githubusercontent.com/71986226/182129022-8e52e601-cb15-4ada-9ce5-64834521d84f.png">
-
- </div>
- <li>Phase 2</li>
-<div  align= "center"  >
-<br>
-
- <img  width=300px height=80x  src="https://user-images.githubusercontent.com/71986226/182179357-966b00d5-0609-4bb4-b986-5b34f9057744.png">
-
- </div>
- </ul>
-<br>
-<li>Open terminal</li>
-<li> Build file process_generator.c.</li>
-
-<br>
-
-```
-gcc process_generator.c -o ex
-```
-
-<li> Run ex.</li>
-
-<br>
-
-```
-./ex
-```
-
-<br>
-<li>Choose a scheduling algorithm.</li>
-
-<br>
-<table>
-<tr>
-<td>Input</td>
-<td>Algorithm</td>
-</tr>
-<tr>
-<td>1</td>
-<td>Non-preemptive Highest Priority First (HPF)</td>
-</tr>
-<tr>
-<td>2</td>
-<td>Shortest Remaining time Next (SRTN)</td>
-</tr>
-<tr>
-<td>3</td>
-<td>Round Robin (RR)</td>
-</tr>
-</table>
-<div  align= "center"  >
-<br>
- <img  src="https://user-images.githubusercontent.com/71986226/182130330-a6f0caad-70fa-4a68-a14c-631d28132a82.png">
-
- </div>
-<br>
-<li>
-There are 2 output file "scheduler.Log" and "scheduler.perf". "memory.log" is created in phase 2.
-<ul>
-<br>
-<li>scheduler.Log
-<div  align= "center"  >
-<br>
-
- <img width=600px src="https://user-images.githubusercontent.com/71986226/182129431-22801211-7e73-4b94-a1c0-6eb473ebefa9.png">
-
- </div>
-</li>
-<br>
-<li>scheduler.perf
-<div  align= "center"  >
-<br>
-
- <img src="https://user-images.githubusercontent.com/71986226/182129632-ec5c139e-4ced-4506-a482-58222727a1ea.png">
-
- </div>
-</li>
-<li>memory.log
-<div  align= "center"  >
-<br>
-
- <img width=600px src="https://user-images.githubusercontent.com/71986226/182178875-e9f4f08b-a5fe-4f49-bc03-31d85d49a14d.png">
-
- </div>
-</li>
-<ul>
-</li>
-</ol>
-<hr style="background-color: #4b4c60"></hr>
- <a id="Work"> </a>
 
 ## <img align= center width=70px height=70px src="https://user-images.githubusercontent.com/71986226/178469374-15498392-26a1-4ba0-99d7-9ce899c131f0.gif"> Data Structures Used
 
