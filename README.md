@@ -15,11 +15,7 @@
 
 - <a href ="#about"> 📙 Overview</a>
 - <a href ="#Started"> 💻 Get Started</a>
-- <a href ="#Path"> 🎯 Path of the program</a>
 - <a href ="#Work"> 🧱 Data Structures Used </a>
-- ⚙<a href ="#Algorithms"> Algorithms Explanation</a>
-- <a href ="#Assumptions"> 📃 Assumptions</a>
-- <a href ="#Structure"> 📁 File Structure</a>
 - <a href ="#Contributors"> ✨ Contributors</a>
 - <a href ="#License"> 🔒 License</a>
 <hr style="background-color: #4b4c60"></hr>
@@ -32,14 +28,13 @@
 <li> The aim of this project is to develop a simple Crawler- based search engine that demonstrates the main features of a search engine
 and the interaction between them.</li>
 <li> The main features of a search engine</li>
-<br>
 <ul>
 <li> Web Crawling</li>
-<li> Indexing</li>
+<li> Indexing</li> 
 <li> Ranking</li>
 </ul>
-<br>
-<li> Build using <a href="https://en.wikipedia.org/wiki/C_(programming_language)">C lnaguage</a>.</li>
+<li> Build using <a href="https://en.wikipedia.org/wiki/Java_(programming_language)">Java lnaguage</a>.</li>
+<li>  Web interface  for  Search Engine  using <a href="https://en.wikipedia.org/wiki/HTML">Html</a> & <a href="https://en.wikipedia.org/wiki/CSS">CSS</a>.</li>
 </ul>
 <hr style="background-color: #4b4c60"></hr>
 <a id = "Started"></a>
@@ -52,21 +47,12 @@ and the interaction between them.</li>
 <br>
 
 ```
-git clone https://github.com/AdhamAliAbdelAal/OS-Project
+git clone https://github.com/abdelrahman0123/Flash
 ```
 
 </li>
-<li> You will need to download platform <a href="https://www.linux.org/">Linux</a>. </li>
-<br>
-<li>  Install a C Compiler on Linux if you haven't.
-
-<br>
-
-```
-sudo dnf install gcc
-```
-
-</li>
+<li> You will need to download <a href="https://www.oracle.com/java/technologies/downloads/">Jdk</a>. </li>
+<li> You will need to download <a href="https://tomcat.apache.org/download-90.cgi">Tomcat</a>. </li>
 </ol>
 <hr style="background-color: #4b4c60"></hr>
 
@@ -157,30 +143,9 @@ We made an array of arrivals in the process generator as a shared memory with th
 <li>We synchronize between the stopped process and the arrived one if they come in the same second so that the stopped process is put into the queue before the arrived process.
 </li>
 </ol>
-<hr style="background-color: #4b4c60"></hr>
-<a id="Structure"> </a>
 
-## <img align= center width=60px height=60px src="https://media1.giphy.com/media/igsIZv3VwIIlRIpq5G/giphy.gif?cid=ecf05e47faatmwdhcst7c2d4eontr459hjd35zf3an324elo&rid=giphy.gif&ct=s"> File Structure
+<a id ="License"></a>
 
-<br>
-<div align= center>
-<img   src="https://user-images.githubusercontent.com/71986226/182103221-e5d5b882-f846-4794-814f-5f42403948a8.png">
-</div>
-
-<hr style="background-color: #4b4c60"></hr>
-
-## <img  align="center" width= 70px height =55px src="https://media0.giphy.com/media/Xy702eMOiGGPzk4Zkd/giphy.gif?cid=ecf05e475vmf48k83bvzye3w2m2xl03iyem3tkuw2krpkb7k&rid=giphy.gif&ct=s"> Contributors <a id ="Contributors"></a>
-
-<table align="center" >
-  <tr>
-    <td align="center"><a href="https://github.com/abdelrahman0123"><img src="https://avatars.githubusercontent.com/u/67989900?v=4" width="150;" alt=""/><br /><sub><b>Abdelrahman Hamdy</b></sub></a><br /></td>
-       <td align="center"><a href="https://github.com/AbdelrahmanNoaman"><img src="https://avatars.githubusercontent.com/u/76150639?v=4" width="150;" alt=""/><br /><sub><b>Abdelrahman Noaman</b></sub></a><br /></td>
-     <td align="center"><a href="https://github.com/AdhamAliAbdelAal" ><img src="https://avatars.githubusercontent.com/u/83884426?v=4" width="150;" alt=""/><br /><sub><b>Adham Ali</b></sub></a><br />
-    </td>
-     <td align="center"><a href="https://github.com/EslamAsHhraf"><img src="https://avatars.githubusercontent.com/u/71986226?v=4" width="150;" alt=""/><br /><sub><b>Eslam Ashraf</b></sub></a><br /></td>
-  </tr>
-</table>
-
-## 🔒 License <a id ="License"></a>
+## 🔒 License
 
 > **Note**: This software is licensed under MIT License, See [License](https://github.com/abdelrahman0123/Flash/blob/main/LICENSE) for more information ©abdelrahman0123.
