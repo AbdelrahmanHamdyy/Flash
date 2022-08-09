@@ -4,7 +4,7 @@
 
 </div>
 <p align="center">
-   <img align="center"  height="400px"  src="https://user-images.githubusercontent.com/71986226/183626365-0709b859-60b9-4738-b53e-b19261018304.jpg" alt="logo">
+   <img align="center" height="500px"  src="https://user-images.githubusercontent.com/71986226/183626365-0709b859-60b9-4738-b53e-b19261018304.jpg" alt="logo">
 </p>
 
 <p align="center"> 
@@ -29,22 +29,14 @@
 ## <img align="center"  width =60px  height =70px src="https://media2.giphy.com/media/Yn4nioYWSZMqiPNVuD/giphy.gif?cid=ecf05e47m5h78yoqhdkg8pq54o5qsxhdoltjxyfe08d4vxvg&rid=giphy.gif&ct=s"> Overview
 
 <br>
-<ul> 
-<li>
-A CPU scheduler determines an order for the execution of its scheduled processes.</li>
-<li>It decides which process will run according to a certain data structure that keeps track of the processes in the system and their status.</li>
-<li>A process, upon creation, has one of the three states: Running, Ready, Blocked (doing I/O, using other resources than CPU or waiting on unavailable resource).</li>
-<li>
-A bad scheduler will make a very bad operating system, so your scheduler should be as much optimized as possible in terms of memory and time usage.
-</li>
-
-<li>
-The project has 2 phases.</li>
+<ul>
+<li> The aim of this project is to develop a simple Crawler- based search engine that demonstrates the main features of a search engine
+and the interaction between them.</li>
+<li> The main features of a search engine</li>
 <br>
-
-- <a href="https://github.com/AdhamAliAbdelAal/OS-Project/blob/master/Docs/Project%20Phase%201.pdf">Project Phase 1</a>
-- <a href="https://github.com/AdhamAliAbdelAal/OS-Project/blob/master/Docs/Project%20Phase%202.pdf">Project Phase 2</a>
-
+<li> Web Crawling</li>
+<li> Indexing</li>
+<li> Ranking</li>
 <br>
 <li> Build using <a href="https://en.wikipedia.org/wiki/C_(programming_language)">C lnaguage</a>.</li>
 </ul>
