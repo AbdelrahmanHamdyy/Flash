@@ -63,33 +63,47 @@ git clone https://github.com/abdelrahman0123/Flash
 
 ## <img align= center width=70px height=70px src="https://raw.githubusercontent.com/EslamAsHhraf/EslamAsHhraf/main/images/skills.gif"> Search Engine Modules
 
-<ul>
-<li > Web Crawler</li>
+<table>
+<tr>
+<th>Module</th>
+<th>Description</th>
+</tr>
+<tr>
+<th> Web Crawler</th>
+<th>The web crawler is a software agent that collects documents from the web. The crawler starts with a list of URL addresses (seed set). It downloads the documents identified by these URLs and extracts hyper-links from them. The extracted URLs are added to the list of URLs to be downloaded. Thus, web crawling is a recursive process.</th>
+</tr>
+<tr>
+<th>Indexer</th>
+<th>The output of web crawling process is a set of downloaded HTML documents. To respond to user queries fast enough, the contents of these documents have to be indexed in a data structure that stores the words contained in each document and their importance (e.g., whether they are in the title, in a header or in plain text).</th>
+</tr>
+<tr>
+<th>  Query Processor</th>
+<th>This module receives search queries, performs necessary preprocessing and searches the index for relevant documents. Retrieve documents containing words that share the same stem with those in the search query. For example, the search query “travel” should match (with lower degree) the words “traveler”, “traveling” … etc.</th>
+</tr>
+<tr>
+<th>Phrase Searching</th>
+<th>Search engines will generally search for words as phrases when quotation marks are placed around the phrase.</th>
+</tr>
+<tr>
+<th>Ranker</th>
+<th>
+<p>The ranker module sorts documents based on their popularity and relevance to the search query.
+</p>
 <br>
-<p>The web crawler is a software agent that collects documents from the web. The crawler starts with a list of URL addresses (seed set). It downloads the documents identified by these URLs and extracts hyper-links from them. The extracted URLs are added to the list of URLs to be downloaded. Thus, web crawling is a recursive process.</p>
-<li> Indexer</li>
-<br>
-<p>The output of web crawling process is a set of downloaded HTML documents. To respond to user queries fast enough, the contents of these documents have to be indexed in a data structure that stores the words contained in each document and their importance (e.g., whether they are in the title, in a header or in plain text).</p>
-<li> Query Processor</li>
-<br>
-<p>This module receives search queries, performs necessary preprocessing and searches the index for relevant documents. Retrieve documents containing words that share the same stem with those in the search query. For example, the search query “travel” should match (with lower degree) the words “traveler”, “traveling” … etc.</p>
-<li> Phrase Searching</li>
-<br>
-<p>Search engines will generally search for words as phrases when quotation marks are placed around the phrase.</p>
-<li> Ranker</li>
-<br>
-<p>The ranker module sorts documents based on their popularity and relevance to the search query.</p>
 <ol>
 <li>Relevance</li>
-<br>
 <p>Relevance is a relation between the query words and the result page and could be calculated in several ways such as tf-idf of the query word in the result page or simply whether the query word appeared in the title, heading, or body. And then you aggregate the scores from all query words to produce the final page relevance score.</p>
 <li>Popularity</li>
 <br>
 <p>Popularity is a measure for the importance of any web page regardless the requested query. You can use pagerank algorithm (as explained in the lecture) or other ranking algorithms to calculate each page popularity.</p>
 </ol>
-<li>  Voice Recognition Search. Use a voice query instead of a typed one.</li>
-</ul>
-
+</th>
+</tr>
+<tr>
+<th>Voice Recognition Search</th>
+<th>Using a voice query instead of a typed one</th>
+</tr>
+</table>
 <hr style="background-color: #4b4c60"></hr>
 
 ## <img  align="center" width= 70px height =55px src="https://media0.giphy.com/media/Xy702eMOiGGPzk4Zkd/giphy.gif?cid=ecf05e475vmf48k83bvzye3w2m2xl03iyem3tkuw2krpkb7k&rid=giphy.gif&ct=s"> Contributors <a id ="Contributors"></a>
