@@ -63,7 +63,7 @@ git clone https://github.com/abdelrahman0123/Flash
 
 ## <img align= center width=70px height=70px src="https://raw.githubusercontent.com/EslamAsHhraf/EslamAsHhraf/main/images/skills.gif"> Search Engine Modules
 
-<table style=" text-align: left;">
+<table align="left;">
 <tr>
 <th>Module</th>
 <th>Description</th>
@@ -86,7 +86,7 @@ git clone https://github.com/abdelrahman0123/Flash
 </tr>
 <tr>
 <th>Ranker</th>
-<th>
+<th align="left;">
 <p>The ranker module sorts documents based on their popularity and relevance to the search query.
 </p>
 <br>
