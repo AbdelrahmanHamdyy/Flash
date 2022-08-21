@@ -4,7 +4,7 @@
 
 </div>
 <p align="center">
-   <img align="center" height="450px"  src="screenshots\10.jpg" alt="logo">
+   <img align="center" height="450px"  src="https://user-images.githubusercontent.com/71986226/185804922-31aa1626-c1a1-4a92-a5eb-cba79cf6ab5b.jpg" alt="logo">
 </p>
 
 <p align="center"> 
@@ -36,6 +36,8 @@ and the interaction between them.</li>
 <br>
 <li> Build using <a href="https://en.wikipedia.org/wiki/Java_(programming_language)">Java lnaguage</a>.</li>
 <li>  Web interface  for  Search Engine  using <a href="https://en.wikipedia.org/wiki/HTML">Html</a> & <a href="https://en.wikipedia.org/wiki/CSS">CSS</a> & <a href="https://en.wikipedia.org/wiki/JavaScript">JS</a>.</li>
+
+<li> Build using <a href="https://en.wikipedia.org/wiki/MongoDB">MongoDB</a>.</li>
 </ul>
 <hr style="background-color: #4b4c60"></hr>
 <a id = "Started"></a>
@@ -59,23 +61,25 @@ git clone https://github.com/abdelrahman0123/Flash
 <hr style="background-color: #4b4c60"></hr>
 <a id = "Work"></a>
 
-## <img align= center width=70px height=70px src="https://user-images.githubusercontent.com/71986226/178469374-15498392-26a1-4ba0-99d7-9ce899c131f0.gif"> Search Engine Modules
+## <img align= center width=70px height=70px src="https://raw.githubusercontent.com/EslamAsHhraf/EslamAsHhraf/main/images/skills.gif"> Search Engine Modules
 
 <br>
-<ul>
-<li>Web Crawler</li>
+<ul style="list-style: none;">
+<li>🔴 Web Crawler</li>
 <br>
-<p>The web crawler is a software agent that collects documents from the web. The crawler starts with a list of URL addresses (seed set). It downloads the documents identified by these URLs and extracts hyper-links from them. The extracted URLs are added to the list of URLs to be downloaded. Thus, web crawling is a recursive process.</p>
-<li>Indexer</li>
+
+- The web crawler is a software agent that collects documents from the web. The crawler starts with a list of URL addresses (seed set). It downloads the documents identified by these URLs and extracts hyper-links from them. The extracted URLs are added to the list of URLs to be downloaded. Thus, web crawling is a recursive process.
+<li>🟠 Indexer</li>
 <br>
-<p>The output of web crawling process is a set of downloaded HTML documents. To respond to user queries fast enough, the contents of these documents have to be indexed in a data structure that stores the words contained in each document and their importance (e.g., whether they are in the title, in a header or in plain text).</p>
-<li>Query Processor</li>
+
+- The output of web crawling process is a set of downloaded HTML documents. To respond to user queries fast enough, the contents of these documents have to be indexed in a data structure that stores the words contained in each document and their importance (e.g., whether they are in the title, in a header or in plain text).<
+<li>🟡 Query Processor</li>
 <br>
 <p>This module receives search queries, performs necessary preprocessing and searches the index for relevant documents. Retrieve documents containing words that share the same stem with those in the search query. For example, the search query “travel” should match (with lower degree) the words “traveler”, “traveling” … etc.</p>
-<li>Phrase Searching</li>
+<li>🟢 Phrase Searching</li>
 <br>
 <p>Search engines will generally search for words as phrases when quotation marks are placed around the phrase.</p>
-<li>Ranker</li>
+<li>🔵 Ranker</li>
 <br>
 <p>The ranker module sorts documents based on their popularity and relevance to the search query.</p>
 <ol>
@@ -86,7 +90,7 @@ git clone https://github.com/abdelrahman0123/Flash
 <br>
 <p>Popularity is a measure for the importance of any web page regardless the requested query. You can use pagerank algorithm (as explained in the lecture) or other ranking algorithms to calculate each page popularity.</p>
 </ol>
-<li>Voice Recognition Search. Use a voice query instead of a typed one.</li>
+<li> 🟣 Voice Recognition Search. Use a voice query instead of a typed one.</li>
 </ul>
 
 <hr style="background-color: #4b4c60"></hr>
