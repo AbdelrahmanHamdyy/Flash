@@ -93,7 +93,6 @@ git clone https://github.com/abdelrahman0123/Flash
 <li>Relevance</li>
 <p>Relevance is a relation between the query words and the result page and could be calculated in several ways such as tf-idf of the query word in the result page or simply whether the query word appeared in the title, heading, or body. And then you aggregate the scores from all query words to produce the final page relevance score.</p>
 <li>Popularity</li>
-<br>
 <p>Popularity is a measure for the importance of any web page regardless the requested query. You can use pagerank algorithm (as explained in the lecture) or other ranking algorithms to calculate each page popularity.</p>
 </ol>
 </td>
