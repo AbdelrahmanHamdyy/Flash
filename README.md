@@ -15,7 +15,7 @@
 
 - <a href ="#about"> 📙 Overview</a>
 - <a href ="#Started"> 💻 Get Started</a>
-- <a href ="#Work"> 🧱 Data Structures Used </a>
+- <a href ="#Work"> 🧱 Search Engine Modules </a>
 - <a href ="#Contributors"> ✨ Contributors</a>
 - <a href ="#License"> 🔒 License</a>
 <hr style="background-color: #4b4c60"></hr>
@@ -35,7 +35,7 @@ and the interaction between them.</li>
 </ul>
 <br>
 <li> Build using <a href="https://en.wikipedia.org/wiki/Java_(programming_language)">Java lnaguage</a>.</li>
-<li>  Web interface  for  Search Engine  using <a href="https://en.wikipedia.org/wiki/HTML">Html</a> & <a href="https://en.wikipedia.org/wiki/CSS">CSS</a>.</li>
+<li>  Web interface  for  Search Engine  using <a href="https://en.wikipedia.org/wiki/HTML">Html</a> & <a href="https://en.wikipedia.org/wiki/CSS">CSS</a> & <a href="https://en.wikipedia.org/wiki/JavaScript">JS</a>.</li>
 </ul>
 <hr style="background-color: #4b4c60"></hr>
 <a id = "Started"></a>
@@ -54,47 +54,53 @@ git clone https://github.com/abdelrahman0123/Flash
 </li>
 <li> You will need to download <a href="https://www.oracle.com/java/technologies/downloads/">Jdk</a>. </li>
 <li> You will need to download <a href="https://tomcat.apache.org/download-90.cgi">Tomcat</a>. </li>
+<li> You will need to read <a href="https://github.com/abdelrahman0123/Flash/blob/main/Search%20Engine%20Project%20.pdf">Search Engine Project</a> to understand project very well. </li>
 </ol>
 <hr style="background-color: #4b4c60"></hr>
 
-## <img align= center width=70px height=70px src="https://user-images.githubusercontent.com/71986226/178469374-15498392-26a1-4ba0-99d7-9ce899c131f0.gif"> Data Structures Used
+## <img align= center width=70px height=70px src="https://user-images.githubusercontent.com/71986226/178469374-15498392-26a1-4ba0-99d7-9ce899c131f0.gif"> Search Engine Modules
 
 <br>
 <ul>
-<li>Queue</li>
-<li>Priority Queue</li>
-<li>Process Data
-<ul>
-<li>Arrival time</li>
-<li>Priority</li>
-<li>Run time</li>
-<li>ID</li>
-<li>Memsize</li>
+<li>Web Crawler</li>
+<br>
+<p>The web crawler is a software agent that collects documents from the web. The crawler starts with a list of URL addresses (seed set). It downloads the documents identified by these URLs and extracts hyper-links from them. The extracted URLs are added to the list of URLs to be downloaded. Thus, web crawling is a recursive process.</p>
+<li>Indexer</li>
+<br>
+<p>The output of web crawling process is a set of downloaded HTML documents. To respond to user queries fast enough, the contents of these documents have to be indexed in a data structure that stores the words contained in each document and their importance (e.g., whether they are in the title, in a header or in plain text).</p>
+<li>Query Processor</li>
+<br>
+<p>This module receives search queries, performs necessary preprocessing and searches the index for relevant documents. Retrieve documents containing words that share the same stem with those in the search query. For example, the search query “travel” should match (with lower degree) the words “traveler”, “traveling” … etc.</p>
+<li>Phrase Searching</li>
+<br>
+<p>Search engines will generally search for words as phrases when quotation marks are placed around the phrase.</p>
+<li>Ranker</li>
+<br>
+<p>The ranker module sorts documents based on their popularity and relevance to the search query.</p>
+<ol>
+<li>Relevance</li>
+<br>
+<p>Relevance is a relation between the query words and the result page and could be calculated in several ways such as tf-idf of the query word in the result page or simply whether the query word appeared in the title, heading, or body. And then you aggregate the scores from all query words to produce the final page relevance score.</p>
+<li>Popularity</li>
+<br>
+<p>Popularity is a measure for the importance of any web page regardless the requested query. You can use pagerank algorithm (as explained in the lecture) or other ranking algorithms to calculate each page popularity.</p>
+</ol>
+<li>Voice Recognition Search. Use a voice query instead of a typed one.</li>
 </ul>
-</li>
-<li>Memory Node
-<ul>
-<li>Size</li>
-<li>Start</li>
-<li>Pointer to the next memory node</li>
-</ul>
-</li>
-<li> PCB for each process
-<ul>
-<li>ID</li>
-<li>PID</li>
-<li>Arrival time</li>
-<li>Burst time</li>
-<li>Finish time</li>
-<li>Running time</li>
-<li>Stop time</li>
-<li>Priority</li>
-<li>Start time</li>
-<li>Start Address in memory</li>
-<li>Memory Size</li>
-</ul>
-</li>
-</ul>
+
+<hr style="background-color: #4b4c60"></hr>
+
+## <img  align="center" width= 70px height =55px src="https://media0.giphy.com/media/Xy702eMOiGGPzk4Zkd/giphy.gif?cid=ecf05e475vmf48k83bvzye3w2m2xl03iyem3tkuw2krpkb7k&rid=giphy.gif&ct=s"> Contributors <a id ="Contributors"></a>
+
+<table align="center" >
+  <tr>
+    <td align="center"><a href="https://github.com/abdelrahman0123"><img src="https://avatars.githubusercontent.com/u/67989900?v=4" width="150;" alt=""/><br /><sub><b>Abdelrahman Hamdy</b></sub></a><br /></td>
+       <td align="center"><a href="https://github.com/AbdelrahmanNoaman"><img src="https://avatars.githubusercontent.com/u/76150639?v=4" width="150;" alt=""/><br /><sub><b>Abdelrahman Noaman</b></sub></a><br /></td>
+     <td align="center"><a href="https://github.com/AdhamAliAbdelAal" ><img src="https://avatars.githubusercontent.com/u/83884426?v=4" width="150;" alt=""/><br /><sub><b>Adham Ali</b></sub></a><br />
+    </td>
+     <td align="center"><a href="https://github.com/EslamAsHhraf"><img src="https://avatars.githubusercontent.com/u/71986226?v=4" width="150;" alt=""/><br /><sub><b>Eslam Ashraf</b></sub></a><br /></td>
+  </tr>
+</table>
 
 <a id ="License"></a>
 
