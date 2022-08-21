@@ -65,7 +65,7 @@ git clone https://github.com/abdelrahman0123/Flash
 
 <table align="left;">
 <tr>
-<th>Module</th>
+<th width=20%>Module</th>
 <th>Description</th>
 </tr>
 <tr>
@@ -89,7 +89,6 @@ git clone https://github.com/abdelrahman0123/Flash
 <td>
 <p>The ranker module sorts documents based on their popularity and relevance to the search query.
 </p>
-<br>
 <ol>
 <li>Relevance</li>
 <p>Relevance is a relation between the query words and the result page and could be calculated in several ways such as tf-idf of the query word in the result page or simply whether the query word appeared in the title, heading, or body. And then you aggregate the scores from all query words to produce the final page relevance score.</p>
