@@ -63,23 +63,20 @@ git clone https://github.com/abdelrahman0123/Flash
 
 ## <img align= center width=70px height=70px src="https://raw.githubusercontent.com/EslamAsHhraf/EslamAsHhraf/main/images/skills.gif"> Search Engine Modules
 
+<ul>
+<li > Web Crawler</li>
 <br>
-<ul style="list-style: none;">
-<li>🔴 Web Crawler</li>
+<p>The web crawler is a software agent that collects documents from the web. The crawler starts with a list of URL addresses (seed set). It downloads the documents identified by these URLs and extracts hyper-links from them. The extracted URLs are added to the list of URLs to be downloaded. Thus, web crawling is a recursive process.</p>
+<li> Indexer</li>
 <br>
-
-- The web crawler is a software agent that collects documents from the web. The crawler starts with a list of URL addresses (seed set). It downloads the documents identified by these URLs and extracts hyper-links from them. The extracted URLs are added to the list of URLs to be downloaded. Thus, web crawling is a recursive process.
-<li>🟠 Indexer</li>
-<br>
-
-- The output of web crawling process is a set of downloaded HTML documents. To respond to user queries fast enough, the contents of these documents have to be indexed in a data structure that stores the words contained in each document and their importance (e.g., whether they are in the title, in a header or in plain text).<
-<li>🟡 Query Processor</li>
+<p>The output of web crawling process is a set of downloaded HTML documents. To respond to user queries fast enough, the contents of these documents have to be indexed in a data structure that stores the words contained in each document and their importance (e.g., whether they are in the title, in a header or in plain text).</p>
+<li> Query Processor</li>
 <br>
 <p>This module receives search queries, performs necessary preprocessing and searches the index for relevant documents. Retrieve documents containing words that share the same stem with those in the search query. For example, the search query “travel” should match (with lower degree) the words “traveler”, “traveling” … etc.</p>
-<li>🟢 Phrase Searching</li>
+<li> Phrase Searching</li>
 <br>
 <p>Search engines will generally search for words as phrases when quotation marks are placed around the phrase.</p>
-<li>🔵 Ranker</li>
+<li> Ranker</li>
 <br>
 <p>The ranker module sorts documents based on their popularity and relevance to the search query.</p>
 <ol>
@@ -90,7 +87,7 @@ git clone https://github.com/abdelrahman0123/Flash
 <br>
 <p>Popularity is a measure for the importance of any web page regardless the requested query. You can use pagerank algorithm (as explained in the lecture) or other ranking algorithms to calculate each page popularity.</p>
 </ol>
-<li> 🟣 Voice Recognition Search. Use a voice query instead of a typed one.</li>
+<li>  Voice Recognition Search. Use a voice query instead of a typed one.</li>
 </ul>
 
 <hr style="background-color: #4b4c60"></hr>
