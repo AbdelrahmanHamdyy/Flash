@@ -100,7 +100,16 @@ git clone https://github.com/abdelrahman0123/Flash
 </tr>
 <tr>
 <td>🔶 Voice Recognition Search</td>
-<td>Using a voice query instead of a typed one</td>
+<td>Using a voice query instead of a typed one.</td>
+<tr>
+<td>🔷 Web Interface</td>
+<td><p>We  implement a web interface for  search engine.</p> 
+<ul>
+<li>This interface receives user queries and displays the resulting pages returned by the engine</li>
+<br>
+<li>The result appears with snippets of the text containing queries words. The output looks like google's results page.</li>
+</ul>
+</td>
 </tr>
 </table>
 
