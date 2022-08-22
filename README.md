@@ -35,10 +35,10 @@ and the interaction between them.</li>
 <li> Ranking</li>
 </ul>
 <br>
-<li> Build using <a href="https://en.wikipedia.org/wiki/Java_(programming_language)">Java lnaguage</a>.</li>
+<li> Built using <a href="https://en.wikipedia.org/wiki/Java_(programming_language)">Java lnaguage</a>.</li>
 <li>  Web interface  for  Search Engine  using <a href="https://en.wikipedia.org/wiki/HTML">Html</a> & <a href="https://en.wikipedia.org/wiki/CSS">CSS</a> & <a href="https://en.wikipedia.org/wiki/JavaScript">JS</a>.</li>
 
-<li> Build using <a href="https://en.wikipedia.org/wiki/MongoDB">MongoDB</a>.</li>
+<li> Built using <a href="https://en.wikipedia.org/wiki/MongoDB">MongoDB</a>.</li>
 </ul>
 <hr style="background-color: #4b4c60"></hr>
 <a id = "Started"></a>
@@ -57,7 +57,7 @@ git clone https://github.com/abdelrahman0123/Flash
 </li>
 <li> You will need to download <a href="https://www.oracle.com/java/technologies/downloads/">Jdk</a>. </li>
 <li> You will need to download <a href="https://tomcat.apache.org/download-90.cgi">Tomcat</a>. </li>
-<li> You will need to read <a href="https://github.com/abdelrahman0123/Flash/blob/main/Search%20Engine%20Project%20.pdf">Search Engine Project</a> to understand project very well. </li>
+<li> You will need to read <a href="https://github.com/abdelrahman0123/Flash/blob/main/Search%20Engine%20Project%20.pdf">Search Engine Project</a> to understand the project very well and how the search engine operates. </li>
 </ol>
 <hr style="background-color: #4b4c60"></hr>
 <a id = "Work"></a>
