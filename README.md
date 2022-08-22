@@ -5,9 +5,6 @@
 </div>
 <p align="center">
    <img align="center" height="450px"  src="https://user-images.githubusercontent.com/71986226/185804922-31aa1626-c1a1-4a92-a5eb-cba79cf6ab5b.jpg" alt="logo">
-
-   <br>
-     <img align="center" height=350px  src="https://user-images.githubusercontent.com/71986226/185816905-080167a3-b937-487f-a587-5dad5b310ce0.gif">
 </p>
 
 <p align="center"> 
@@ -65,7 +62,7 @@ git clone https://github.com/abdelrahman0123/Flash
 <hr style="background-color: #4b4c60"></hr>
 <a id = "Work"></a>
 
-## <img align= center width=70px height=70px src="https://raw.githubusercontent.com/EslamAsHhraf/EslamAsHhraf/main/images/skills.gif"> Search Engine Modules
+## <img align= center width=65px height=65px src="https://raw.githubusercontent.com/EslamAsHhraf/EslamAsHhraf/main/images/skills.gif"> Search Engine Modules
 
 <table align="left;">
 <tr>
@@ -112,6 +109,10 @@ git clone https://github.com/abdelrahman0123/Flash
 
 ## <img  align= center width= 70px height =70px src="https://img.genial.ly/5f91608064ad990c6ee12237/bd7195a3-a8bb-494b-8a6d-af48dd4deb4b.gif?genial&1643587200063"> GIF Demo
 
+<div  align="center">
+  <img align="center" height=350px  src="https://user-images.githubusercontent.com/71986226/185816905-080167a3-b937-487f-a587-5dad5b310ce0.gif">
+</div>
+<hr style="background-color: #4b4c60"></hr>
 <div  align="center">
   <img align="center" height=350px  src="https://user-images.githubusercontent.com/71986226/185816905-080167a3-b937-487f-a587-5dad5b310ce0.gif">
 </div>
