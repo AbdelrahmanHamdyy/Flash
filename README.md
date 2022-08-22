@@ -16,7 +16,7 @@
 - <a href ="#about"> 📙 Overview</a>
 - <a href ="#Started"> 💻 Get Started</a>
 - <a href ="#Work"> 🧱 Search Engine Modules </a>
-- <a href ="#Video"> 📽 GIF Demo</a>
+- <a href ="#Video"> 📽 Demo</a>
 - <a href ="#Contributors"> ✨ Contributors</a>
 - <a href ="#License"> 🔒 License</a>
 <hr style="background-color: #4b4c60"></hr>
@@ -107,7 +107,7 @@ git clone https://github.com/abdelrahman0123/Flash
 <hr style="background-color: #4b4c60"></hr>
 <a id ="Video"></a>
 
-## <img  align= center width= 70px height =70px src="https://img.genial.ly/5f91608064ad990c6ee12237/bd7195a3-a8bb-494b-8a6d-af48dd4deb4b.gif?genial&1643587200063"> GIF Demo
+## <img  align= center width= 70px height =70px src="https://img.genial.ly/5f91608064ad990c6ee12237/bd7195a3-a8bb-494b-8a6d-af48dd4deb4b.gif?genial&1643587200063"> Demo
 
 <div  align="center">
   <img align="center" height=370px  src="https://user-images.githubusercontent.com/71986226/185816905-080167a3-b937-487f-a587-5dad5b310ce0.gif">
