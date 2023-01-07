@@ -51,7 +51,7 @@ and the interaction between them.</li>
 <br>
 
 ```
-git clone https://github.com/abdelrahman0123/Flash
+git clone https://github.com/AbdelrahmanHamdyy/Flash
 ```
 
 </li>
@@ -133,7 +133,7 @@ git clone https://github.com/abdelrahman0123/Flash
 
 <table align="center" >
   <tr>
-    <td align="center"><a href="https://github.com/abdelrahman0123"><img src="https://avatars.githubusercontent.com/u/67989900?v=4" width="150;" alt=""/><br /><sub><b>Abdelrahman Hamdy</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/AbdelrahmanHamdyy"><img src="https://avatars.githubusercontent.com/u/67989900?v=4" width="150;" alt=""/><br /><sub><b>Abdelrahman Hamdy</b></sub></a><br /></td>
        <td align="center"><a href="https://github.com/AbdelrahmanNoaman"><img src="https://avatars.githubusercontent.com/u/76150639?v=4" width="150;" alt=""/><br /><sub><b>Abdelrahman Noaman</b></sub></a><br /></td>
      <td align="center"><a href="https://github.com/AdhamAliAbdelAal" ><img src="https://avatars.githubusercontent.com/u/83884426?v=4" width="150;" alt=""/><br /><sub><b>Adham Ali</b></sub></a><br />
     </td>
@@ -145,4 +145,4 @@ git clone https://github.com/abdelrahman0123/Flash
 
 ## 🔒 License
 
-> **Note**: This software is licensed under MIT License, See [License](https://github.com/abdelrahman0123/Flash/blob/main/LICENSE) for more information ©abdelrahman0123.
+> **Note**: This software is licensed under MIT License, See [License](https://github.com/AbdelrahmanHamdyy/Flash/blob/main/LICENSE) for more information ©AbdelrahmanHamdyy.
